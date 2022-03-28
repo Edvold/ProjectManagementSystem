@@ -2,10 +2,10 @@ Feature: Create Project
 	Description: An employee creates a project
 	Actor: Employee
 
-#	Scenario: Employee creates a project with a date
-#		Given The employee creates a project with a valid date
-#		Then A project is created with the given date
-#
+	Scenario: Employee creates a project with a date
+		Given The employee creates a project with a valid date
+		Then A project is created with the given date
+
 #	Scenario: Employee creates a project without a date
 #		Given An employee creates a project
 #		Then A project is created
