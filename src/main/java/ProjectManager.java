@@ -4,6 +4,8 @@ import java.util.List;
 
 public class ProjectManager {
 
+    private String projectNumber = "001";
+
     private List<Project> projectList = new ArrayList<>();
     private static ProjectManager instance;
 
@@ -24,14 +26,26 @@ public class ProjectManager {
         if(hasName(projectName)){
             throw new DuplicateNameError("Name is already in use");
         }
-        projectList.add(new Project(date, projectName));
+
+        if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
+            projectNumber = "001";
+        }
+        projectList.add(new Project(date, projectName, projectNumber));
+        Integer i = Integer.getInteger(projectNumber);
+        i++;
+        projectNumber = String.valueOf(i);
     }
 
     public void createProject(String projectName) throws DuplicateNameError {
         if(hasName(projectName)){
             throw new DuplicateNameError("Name is already in use");
         }
-        projectList.add(new Project(projectName));
+        if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
+            projectNumber = "001";
+        }
+        Integer i = Integer.getInteger(projectNumber);
+        i++;
+        projectNumber = String.valueOf(i);
     }
 
     private boolean hasName(String name){
