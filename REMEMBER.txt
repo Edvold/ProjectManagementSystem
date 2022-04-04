@@ -7,11 +7,12 @@ Overvej login-forside i stedet for prompts
 TO DO:
 - Bjarke:
     GUI
-    CreateProject
+    All project features
     
 - Mathias
     AddActivity
     EditActivty
+    RegisterHours
 
 
 
