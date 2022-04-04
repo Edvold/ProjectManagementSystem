@@ -31,9 +31,14 @@ public class ProjectManager {
             projectNumber = "001";
         }
         projectList.add(new Project(date, projectName, projectNumber));
-        Integer i = Integer.getInteger(projectNumber);
+        Integer i = Integer.valueOf(projectNumber);
         i++;
-        projectNumber = String.valueOf(i);
+        String s = String.valueOf(i);
+        projectNumber = "";
+        for(int j = 3; j > s.length(); j--){
+            projectNumber += "0";
+        }
+        projectNumber += i;
     }
 
     public void createProject(String projectName) throws DuplicateNameError {
@@ -43,9 +48,15 @@ public class ProjectManager {
         if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
             projectNumber = "001";
         }
-        Integer i = Integer.getInteger(projectNumber);
+        projectList.add(new Project(projectName, projectNumber));
+        Integer i = Integer.valueOf(projectNumber);
         i++;
-        projectNumber = String.valueOf(i);
+        String s = String.valueOf(i);
+        projectNumber = "";
+        for(int j = 3; j > s.length(); j--){
+            projectNumber += "0";
+        }
+        projectNumber += i;
     }
 
     private boolean hasName(String name){
