@@ -33,12 +33,8 @@ public class ProjectManager {
         projectList.add(new Project(date, projectName, projectNumber));
         Integer i = Integer.valueOf(projectNumber);
         i++;
-        String s = String.valueOf(i);
-        projectNumber = "";
-        for(int j = 3; j > s.length(); j--){
-            projectNumber += "0";
-        }
-        projectNumber += i;
+
+        projectNumber = leftPadding(i, 3);
     }
 
     public void createProject(String projectName) throws DuplicateNameError {
@@ -51,12 +47,9 @@ public class ProjectManager {
         projectList.add(new Project(projectName, projectNumber));
         Integer i = Integer.valueOf(projectNumber);
         i++;
-        String s = String.valueOf(i);
-        projectNumber = "";
-        for(int j = 3; j > s.length(); j--){
-            projectNumber += "0";
-        }
-        projectNumber += i;
+
+        projectNumber = leftPadding(i, 3);
+
     }
 
     private boolean hasName(String name){
@@ -64,6 +57,16 @@ public class ProjectManager {
             return true;
         }
         return false;
+    }
+
+    private String leftPadding(int i, int stringLength) {
+        String iString = String.valueOf(i);
+        int amountOfZeroes = stringLength - iString.length();
+        for (int j = 0; j < amountOfZeroes; j++)
+        {
+            iString = "0" + iString;
+        }
+        return  iString;
     }
 
     public Project getProjectByName(String name){
