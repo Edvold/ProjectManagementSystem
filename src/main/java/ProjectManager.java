@@ -31,8 +31,9 @@ public class ProjectManager {
             projectNumber = "001";
         }
         projectList.add(new Project(date, projectName, projectNumber));
-        Integer i = Integer.getInteger(projectNumber);
+        Integer i = Integer.valueOf(projectNumber);
         i++;
+
         projectNumber = leftPadding(i, 3);
     }
 
@@ -43,9 +44,12 @@ public class ProjectManager {
         if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
             projectNumber = "001";
         }
-        Integer i = Integer.getInteger(projectNumber);
+        projectList.add(new Project(projectName, projectNumber));
+        Integer i = Integer.valueOf(projectNumber);
         i++;
+
         projectNumber = leftPadding(i, 3);
+
     }
 
     private boolean hasName(String name){

@@ -5,6 +5,7 @@ import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CreateProject {
@@ -70,12 +71,14 @@ public class CreateProject {
     }
     @Then("A project is created")
     public void a_project_is_created() {
-        assertTrue(project != null);
+        assertNotNull(project);
     }
+
     @Then("The date of the project is not initialized")
     public void the_date_of_the_project_is_not_initialized() {
         assertTrue(project.getStartDate() == null);
     }
+
     @Given("The employee creates a project with an invalid date")
     public void the_employee_creates_a_project_with_an_invalid_date() {
         projectManager.getInstance().emptyList();
