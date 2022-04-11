@@ -1,4 +1,3 @@
-import io.cucumber.java.ca.Cal;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -8,7 +7,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class CreateProject {
+public class ProjectSteps {
 
     private ErrorMessageHolder errorMessageHolder;
     private Project project;
@@ -16,7 +15,7 @@ public class CreateProject {
     private ProjectManager projectManager;
     private String dummyName = "name";
 
-    public CreateProject(ErrorMessageHolder errorMessageHolder){
+    public ProjectSteps(ErrorMessageHolder errorMessageHolder){
         this.errorMessageHolder = errorMessageHolder;
     }
 
@@ -128,6 +127,54 @@ public class CreateProject {
         } catch (DuplicateNameError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
+    }
+
+    @Given("The date is valid")
+    public void the_date_is_valid() {
+        projectManager.getInstance().emptyList();
+        projectDate = LocalDateTime.now();
+        projectDate = projectDate.plusDays(1);
+        try {
+            projectManager.getInstance().createProject(projectDate,dummyName);
+            this.project = projectManager.getInstance().getProjectByName(dummyName);
+        }
+        catch (InvalidDateError error){
+            errorMessageHolder.setErrorMessage(error.getMessage());
+        } catch (DuplicateNameError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        projectDate = projectDate.plusDays(1);
+    }
+
+    @When("The employee changes the start date of the project")
+    public void the_employee_changes_the_start_date_of_the_project() {
+        try {
+            projectManager.getInstance().changeProjectStartDate(project.getProjectName(),projectDate);
+        } catch (InvalidDateError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+    }
+
+    @Then("The project start date is the new date")
+    public void the_project_start_date_is_the_new_date() {
+        assertTrue(project.getStartDate().equals(projectDate));
+    }
+
+    @Given("The date is invalid")
+    public void the_date_is_invalid() {
+        projectManager.getInstance().emptyList();
+        projectDate = LocalDateTime.now();
+        projectDate = projectDate.plusDays(1);
+        try {
+            projectManager.getInstance().createProject(projectDate,dummyName);
+            this.project = projectManager.getInstance().getProjectByName(dummyName);
+        }
+        catch (InvalidDateError error){
+            errorMessageHolder.setErrorMessage(error.getMessage());
+        } catch (DuplicateNameError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        projectDate = projectDate.minusDays(2);
     }
 
 
