@@ -4,10 +4,19 @@ Husk at opdatere diagrammer/ lave sekvensdiagrammer ordentligt.
 Overvej login-forside i stedet for prompts
 
 
+TO DO:
+- Bjarke:
+    GUI
+    All project features
+    
+- Mathias
+    AddActivity
+    EditActivty
+    RegisterHours
+
+evt. tilføje flere scenarier til editProject.
 
 
 
-
-
-
+Icons:
 https://fonts.google.com/icons?selected=Material+Icons

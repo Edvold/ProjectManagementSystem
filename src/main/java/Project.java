@@ -1,5 +1,3 @@
-import io.cucumber.java.bs.A;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -54,6 +52,19 @@ public class Project {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
+        if((this.startDate != null) & (startDate.isAfter(this.startDate))){
+            this.startDate = startDate;
+        }
+        else if ((this.startDate == null) & (startDate.isAfter(LocalDateTime.now()))){
+            this.startDate = startDate;
+        }
+        else {
+            throw new InvalidDateError("Invalid date");
+        }
+
     }
 
     public void emptyList() {
