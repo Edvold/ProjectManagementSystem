@@ -18,10 +18,6 @@ public class ProjectManager {
         return instance;
     }
 
-    public boolean hasProject(Project project){
-        return projectList.contains(project);
-    }
-
     public void createProject(LocalDateTime date, String projectName) throws InvalidDateError, DuplicateNameError {
         if(hasName(projectName)){
             throw new DuplicateNameError("Name is already in use");
