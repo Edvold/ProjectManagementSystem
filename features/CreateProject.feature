@@ -23,3 +23,5 @@ Feature: Create Project
 		Given A project already exists with the same name
 		When An employee creates a project with the same name
 		Then An error is raised with message "Name is already in use"
+
+		# Check project number
