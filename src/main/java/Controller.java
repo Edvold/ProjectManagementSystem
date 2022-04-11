@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
     public static void main(String[] args) {
+
+        List<String> projectNameList = new ArrayList<>();
 
         ProjectManager projectManager = ProjectManager.getInstance();
         Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -31,7 +35,10 @@ public class Controller {
         JTextArea text = new JTextArea();
         text.setBounds(0,screenHeight/4,225,100);
         text.setText("line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n");
-        JScrollPane projectView = new JScrollPane(text);
+
+        JList projectNameJList = new JList(projectNameList.toArray());
+
+        JScrollPane projectView = new JScrollPane(projectNameJList);
         projectView.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         projectView.setBounds(0,screenHeight/4, screenWidth-20, screenHeight/2+screenHeight/4-50);
         startFrame.add(projectView);
@@ -60,6 +67,8 @@ public class Controller {
                    String projectName = JOptionPane.showInputDialog(startFrame,"Insert project name",null);
                     try {
                         projectManager.getInstance().createProject(projectName);
+                        projectNameList.add(projectName);
+                        projectNameJList.setListData(projectNameList.toArray());
                     } catch (DuplicateNameError ex) {
                         JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
                     }
