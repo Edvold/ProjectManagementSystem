@@ -129,8 +129,8 @@ public class ProjectSteps {
         }
     }
 
-    @Given("The date is valid")
-    public void the_date_is_valid() {
+    @Given("The date is valid for project")
+    public void the_date_is_valid_for_project() {
         projectManager.getInstance().emptyList();
         projectDate = LocalDateTime.now();
         projectDate = projectDate.plusDays(1);

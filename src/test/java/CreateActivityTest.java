@@ -22,8 +22,8 @@ public class CreateActivityTest {
         this.errorMessageHolder = errorMessageHolder;
     }
 
-    @Given("The date is valid")
-    public void the_date_is_valid() {
+    @Given("The date is valid for activity")
+    public void the_date_is_valid_for_activity() {
         project.emptyList();
         activityStartDate = LocalDateTime.now();
         activityEndDate = LocalDateTime.now().plusDays(20);

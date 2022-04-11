@@ -3,7 +3,7 @@ Feature: Create Activity
   Actor: Employee
 
   Scenario: Employee creates an activity with valid date
-    Given The date is valid
+    Given The date is valid for activity
     When The employee creates an activity
     Then The activity is added to the project
 

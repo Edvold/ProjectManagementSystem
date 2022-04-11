@@ -3,7 +3,7 @@ Feature: Change project start date
   Actor: Employee
 
   Scenario: Employee changes the start date
-    Given The date is valid
+    Given The date is valid for project
     When The employee changes the start date of the project
     Then The project start date is the new date
 
