@@ -54,6 +54,10 @@ public class Project {
         return projectName;
     }
 
+    public String getPROJECT_NUMBER() {
+        return PROJECT_NUMBER;
+    }
+
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
         if((this.startDate != null) & (startDate.isAfter(this.startDate))){
             this.startDate = startDate;

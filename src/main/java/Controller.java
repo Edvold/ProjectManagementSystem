@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +12,8 @@ public class Controller {
 
     public static void main(String[] args) {
 
-        List<String> projectNameList = new ArrayList<>();
+        List<String> projectFieldsList = new ArrayList<>();
+        String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
         ProjectManager projectManager = ProjectManager.getInstance();
         Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -32,25 +36,35 @@ public class Controller {
         createProjectButton.setBounds(0, 0, screenWidth/4, screenHeight/4);
         startFrame.add(createProjectButton);
 
-        JTextArea text = new JTextArea();
-        text.setBounds(0,screenHeight/4,225,100);
-        text.setText("line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n line\n");
+        JList projectFieldsJList = new JList(projectFieldsList.toArray());
+        projectFieldsJList.setFont(new Font("Courier New",0,30));
 
-        JList projectNameJList = new JList(projectNameList.toArray());
-
-        JScrollPane projectView = new JScrollPane(projectNameJList);
-        projectView.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        JScrollPane projectView = new JScrollPane(projectFieldsJList);
+        projectView.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        projectView.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         projectView.setBounds(0,screenHeight/4, screenWidth-20, screenHeight/2+screenHeight/4-50);
+        projectView.setColumnHeaderView(new JLabel("Project Information"));
         startFrame.add(projectView);
 
         JPanel project = new JPanel();
-        project.setBackground(Color.BLUE);
-        project.setBounds(0,screenHeight/4,225,225);
 
-        JTextField text1 = new JTextField(5);
-        JTextField text2 = new JTextField(5);
-        project.add(text1);
-        project.add(text2);
+        JTextField nameField = new JTextField(5);
+        JTextField yearField = new JTextField(5);
+        JComboBox monthField = new JComboBox(months);
+        JTextField dayField = new JTextField(5);
+
+        project.add(new JLabel("Name:"));
+        project.add(nameField);
+        project.add(Box.createHorizontalStrut(20));
+        project.add(new JLabel("Year"));
+        project.add(yearField);
+        project.add(Box.createHorizontalStrut(20));
+        project.add(new JLabel("Month"));
+        project.add(monthField);
+        project.add(Box.createHorizontalStrut(20));
+        project.add(new JLabel("Day"));
+        project.add(dayField);
+
 
 
 
@@ -64,15 +78,56 @@ public class Controller {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == createProjectButton){
-                   String projectName = JOptionPane.showInputDialog(startFrame,"Insert project name",null);
-                    try {
-                        projectManager.getInstance().createProject(projectName);
-                        projectNameList.add(projectName);
-                        projectNameJList.setListData(projectNameList.toArray());
-                    } catch (DuplicateNameError ex) {
-                        JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                    int inputs = JOptionPane.showConfirmDialog(null,project,"Enter name and date",JOptionPane.OK_CANCEL_OPTION);
+                    if(inputs == JOptionPane.OK_OPTION){
+                        LocalDateTime projectDate = null;
+                        try {
+                            projectDate = LocalDateTime.of(Integer.valueOf(yearField.getText()),monthField.getSelectedIndex()+1,Integer.valueOf(dayField.getText()),0,0 );
+                        }
+                        catch (Exception error){
+                            JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                        }
+                        String projectName = nameField.getText();
+                        try {
+                            projectManager.getInstance().createProject(projectDate, projectName);
+
+                            //creating a string with projectname, date and number
+                            String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
+                            projectDate.getYear() + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                            projectFieldsList.add(projectFields);
+                            projectFieldsJList.setListData(projectFieldsList.toArray());
+
+                            // only clearing optionpane if project is created
+                            nameField.setText("");
+                            yearField.setText("");
+                            dayField.setText("");
+                            monthField.setSelectedIndex(0);
+                        } catch (DuplicateNameError | InvalidDateError ex) {
+                            JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
+            }
+        });
+
+        projectFieldsJList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                //do nothing
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if((e.getKeyCode() == KeyEvent.VK_ENTER) & (projectFieldsJList.getSelectedIndex() >= 0)){
+                    createProjectButton.setVisible(false);
+                    projectView.setVisible(false);
+                    System.out.println("Hello");
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                //do nothing
             }
         });
     }
