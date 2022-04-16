@@ -31,7 +31,7 @@ public class CreateActivityTest {
         assertTrue(isDateValid(activityEndDate));
     }
     @When("The employee creates an activity")
-    public void the_employee_creates_an_activity() throws InvalidDateError {
+    public void the_employee_creates_an_activity() {
         try {
             project.createActivity(activityName, activityStartDate, activityEndDate);
         } catch (InvalidDateError | DuplicateNameError e) {
@@ -74,7 +74,7 @@ public class CreateActivityTest {
         assertTrue(project.hasActivtyWithName(activityName));
     }
     @When("An employee creates an activity with the same name")
-    public void an_employee_creates_an_activity_with_the_same_name() throws InvalidDateError, DuplicateNameError {
+    public void an_employee_creates_an_activity_with_the_same_name() throws InvalidDateError {
         try {
             project.createActivity(activityName, activityStartDate, activityEndDate);
         } catch (DuplicateNameError e) {
