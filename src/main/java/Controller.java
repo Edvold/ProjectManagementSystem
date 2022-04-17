@@ -84,7 +84,7 @@ public class Controller {
         changeStartDateButton.setVisible(false);
         startFrame.add(changeStartDateButton);
 
-        JList activityFieldsJList = new JList(projectFieldsList.toArray());
+        JList activityFieldsJList = new JList(activityFieldsList.toArray());
         activityFieldsJList.setFont(new Font("Courier New",0,30));
 
         JScrollPane activityView = new JScrollPane(activityFieldsJList);
@@ -100,7 +100,6 @@ public class Controller {
         JComboBox monthField2 = new JComboBox(months);
         JTextField dayField2 = new JTextField(5);
 
-        projectDateChangePromptPanel.add(Box.createHorizontalStrut(20));
         projectDateChangePromptPanel.add(new JLabel("Year"));
         projectDateChangePromptPanel.add(yearField2);
         projectDateChangePromptPanel.add(Box.createHorizontalStrut(20));
@@ -109,6 +108,37 @@ public class Controller {
         projectDateChangePromptPanel.add(Box.createHorizontalStrut(20));
         projectDateChangePromptPanel.add(new JLabel("Day"));
         projectDateChangePromptPanel.add(dayField2);
+
+        JPanel createActivityPromptPanel = new JPanel();
+
+        JTextField nameField2 = new JTextField(5);
+        JTextField yearField3 = new JTextField(5);
+        JComboBox monthField3 = new JComboBox(months);
+        JTextField dayField3 = new JTextField(5);
+        JTextField yearField4 = new JTextField(5);
+        JComboBox monthField4 = new JComboBox(months);
+        JTextField dayField4 = new JTextField(5);
+
+        createActivityPromptPanel.add(new JLabel("Name"));
+        createActivityPromptPanel.add(nameField2);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("Start Year"));
+        createActivityPromptPanel.add(yearField3);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("Start Month"));
+        createActivityPromptPanel.add(monthField3);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("Start Day"));
+        createActivityPromptPanel.add(dayField3);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("End Year"));
+        createActivityPromptPanel.add(yearField4);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("End Month"));
+        createActivityPromptPanel.add(monthField4);
+        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel.add(new JLabel("End Day"));
+        createActivityPromptPanel.add(dayField4);
 
 
 
@@ -137,9 +167,9 @@ public class Controller {
                         try {
                             projectManager.getInstance().createProject(projectDate, projectName);
 
-                            //creating a string with projectname, date and number
+                            //creating a string with project name, date and number
                             String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
-                            projectDate.getYear() + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                                    projectDate.getYear() + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
                             projectFieldsList.add(projectFields);
                             projectFieldsJList.setListData(projectFieldsList.toArray());
 
@@ -189,12 +219,11 @@ public class Controller {
                     if(inputs == JOptionPane.OK_OPTION){
                         LocalDateTime projectDate = null;
                         try {
-                            projectDate = LocalDateTime.of(Integer.valueOf(yearField.getText()),monthField.getSelectedIndex()+1,Integer.valueOf(dayField.getText()),0,0 );
+                            projectDate = LocalDateTime.of(Integer.valueOf(yearField2.getText()),monthField2.getSelectedIndex()+1,Integer.valueOf(dayField2.getText()),0,0 );
                         }
                         catch (Exception error){
                             JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
                         }
-                        String projectName = nameField.getText();
                         try {
                             int index = projectFieldsJList.getSelectedIndex();
                             String name = projectFieldsList.get(index).split(" ")[0];
@@ -207,6 +236,52 @@ public class Controller {
                         } catch (InvalidDateError ex) {
                             JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
                         }
+                    }
+                }
+            }
+        });
+
+        createActivityButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == createActivityButton){
+                    int inputs = JOptionPane.showConfirmDialog(null,createActivityPromptPanel,"Enter Name, Start Date and End Date",JOptionPane.OK_CANCEL_OPTION);
+                    if(inputs == JOptionPane.OK_OPTION){
+                        LocalDateTime startDate = null;
+                        LocalDateTime endDate = null;
+                        try {
+                            startDate = LocalDateTime.of(Integer.valueOf(yearField3.getText()),monthField3.getSelectedIndex()+1,Integer.valueOf(dayField3.getText()),0,0 );
+                            endDate = LocalDateTime.of(Integer.valueOf(yearField4.getText()),monthField4.getSelectedIndex()+1,Integer.valueOf(dayField4.getText()),0,0 );
+                        }
+                        catch (Exception error){
+                            JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                        }
+                        try {
+                            String activityName = nameField2.getText();
+                            int index = projectFieldsJList.getSelectedIndex();
+                            String currentProjectName = projectFieldsList.get(index).split(" ")[0];
+                            projectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName,startDate,endDate);
+
+                            //creating a string with activity name and dates
+                            String activityFields = activityName + "   " + startDate.getDayOfMonth() + "." + startDate.getMonth() + "." +
+                                    startDate.getYear() + "   " + endDate.getDayOfMonth() + "." + endDate.getMonth() + "." +
+                                    endDate.getYear();
+                                    activityFieldsList.add(activityFields);
+                            activityFieldsJList.setListData(activityFieldsList.toArray());
+
+                            // only clearing optionpane if activity is created
+                            nameField2.setText("");
+                            yearField3.setText("");
+                            dayField3.setText("");
+                            monthField3.setSelectedIndex(0);
+                            yearField4.setText("");
+                            dayField4.setText("");
+                            monthField4.setSelectedIndex(0);
+
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                        }
+
                     }
                 }
             }
