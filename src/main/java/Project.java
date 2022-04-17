@@ -7,7 +7,9 @@ public class Project {
     private final String PROJECT_NUMBER;
     private LocalDateTime startDate;
     private String projectName;
+    private Employee projectLeader;
     private ArrayList<Activity> activities = new ArrayList<>();
+    private ArrayList<Employee> employeeList = new ArrayList<>();
 
     public Project(LocalDateTime date, String projectName, String projectNumber) throws InvalidDateError {
         if(date.truncatedTo(ChronoUnit.DAYS).compareTo(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)) < 0){
@@ -25,11 +27,13 @@ public class Project {
         this.PROJECT_NUMBER = String.valueOf(date.getYear()).substring(2) + projectNumber;
     }
 
-    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate) throws InvalidDateError, DuplicateNameError {
+    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, TimeNotSetError {
+        if (this.startDate == null) throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
         try {
-            if (hasActivtyWithName(name)) throw new DuplicateNameError("Name is already in use");
-            activities.add(new Activity(name, startDate, endDate));
-        } catch (InvalidDateError e) {
+            if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
+            activities.add(new Activity(name, startDate, endDate, this.startDate, budgetedTime));
+        } catch (InvalidDateError | TimeNotSetError e) {
+            // Maybe do some stuff here - if not then delete
             throw e;
         }
     }
@@ -41,7 +45,11 @@ public class Project {
         return null;
     }
 
-    public boolean hasActivtyWithName(String name) {
+    public boolean hasActivity(Activity activity) {
+        return hasActivityWithName(activity.getName());
+    }
+
+    public boolean hasActivityWithName(String name) {
         if(getActivityByName(name) != null) return true;
         return false;
     }
@@ -69,6 +77,10 @@ public class Project {
             throw new InvalidDateError("Invalid date");
         }
 
+    }
+
+    public Employee getProjectLeader() {
+        return projectLeader;
     }
 
     public void emptyList() {
