@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 public class ActivitySteps {
 
@@ -17,6 +18,9 @@ public class ActivitySteps {
     private Project project;
     private ErrorMessageHolder errorMessageHolder;
     private double budgetedTime;
+    private Employee projectLeader;
+    private Employee actor;
+    private Employee extraEmployee;
 
     public ActivitySteps(ErrorMessageHolder errorMessageHolder) {
         this.errorMessageHolder = errorMessageHolder;
@@ -68,7 +72,7 @@ public class ActivitySteps {
     public void the_employee_creates_an_activity() {
         try {
             project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
-        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | TimeNotSetError e) {
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
@@ -120,7 +124,7 @@ public class ActivitySteps {
     }
 
     @Given("Another activity in the project exists with the same name")
-    public void another_activity_in_the_project_exists_with_the_same_name() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, TimeNotSetError {
+    public void another_activity_in_the_project_exists_with_the_same_name() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
         createProject(0);
         project.emptyList();
         activityStartDate = LocalDateTime.now();
@@ -130,7 +134,7 @@ public class ActivitySteps {
         assertTrue(project.hasActivityWithName(activityName));
     }
     @When("An employee creates an activity with the same name")
-    public void an_employee_creates_an_activity_with_the_same_name() throws InvalidDateError, DateNotInitializedError, TimeNotSetError {
+    public void an_employee_creates_an_activity_with_the_same_name() throws InvalidDateError, DateNotInitializedError, IllegalArgumentException {
         try {
             project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
         } catch (DuplicateNameError e) {
@@ -156,25 +160,82 @@ public class ActivitySteps {
         assertFalse(budgetedTime > 0);
     }
 
-/*
     @Given("The project leader is the project leader for the given activity")
-    public void the_project_leader_is_the_project_leader_for_the_given_activity() {
-        // Create project with project leader and check that they're the project leader
-        throw new io.cucumber.java.PendingException();
+    public void the_project_leader_is_the_project_leader_for_the_given_activity() throws DuplicateNameError, InvalidDateError {
+        // Actually needs to check if the current user is the project leader
+        createProject(0);
+        projectLeader = new Employee("Carl");
+        actor = projectLeader;
+        project.setProjectLeader(projectLeader);
+        assertEquals(project.getProjectLeader(), actor);
     }
-    @Given("The given start date is valid")
-    public void the_given_start_date_is_valid() {
-        // Check that the date is >= today and before end date
-        throw new io.cucumber.java.PendingException();
+    @Given("There exists an activity")
+    public void there_exists_an_activity() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
+        project.emptyList();
+        activityStartDate = LocalDateTime.now();
+        activityEndDate = LocalDateTime.now().plusDays(20);
+        budgetedTime = 20;
+        project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
+        assertTrue(project.hasActivityWithName(activityName));
+    }
+    @Given("The new start date is valid")
+    public void the_new_start_date_is_valid() {
+        activityStartDate = activityStartDate.plusDays(1);
+        assertTrue(areDatesValid(activityStartDate, activityEndDate, project.getStartDate()));
     }
     @When("The project leader changes the start date")
-    public void the_project_leader_changes_the_start_date() {
-        // set the new start date
-        throw new io.cucumber.java.PendingException();
+    public void the_project_leader_changes_the_start_date() throws MissingRequiredPermissionError, InvalidDateError {
+        Activity activity = project.getActivityByName(activityName);
+        activity.changeDates(activityStartDate, activityEndDate, actor);
+
     }
     @Then("The activity's start date is changed")
     public void the_activity_s_start_date_is_changed() {
-        // check that the start date is the new one
-        throw new io.cucumber.java.PendingException();
-    }*/
+        assertEquals(activityStartDate, project.getActivityByName(activityName).getStartDate());
+    }
+    @Given("The new end date is valid")
+    public void the_new_end_date_is_valid() {
+        activityEndDate = activityEndDate.plusDays(1);
+        assertTrue(areDatesValid(activityStartDate, activityEndDate, project.getStartDate()));
+    }
+    @When("The project leader changes the end date")
+    public void the_project_leader_changes_the_end_date() throws MissingRequiredPermissionError, InvalidDateError {
+        Activity activity = project.getActivityByName(activityName);
+        activity.changeDates(activityStartDate, activityEndDate, actor);
+    }
+    @Then("The activity's end date is changed")
+    public void the_activity_s_end_date_is_changed() {
+        assertEquals(activityEndDate, project.getActivityByName(activityName).getEndDate());
+    }
+    @Given("The given time is valid")
+    public void the_given_time_is_valid() {
+        budgetedTime = 1;
+        assertTrue(budgetedTime > 0);
+    }
+    @When("The project leader changes the budgeted time")
+    public void the_project_leader_changes_the_budgeted_time() throws MissingRequiredPermissionError, IllegalArgumentException {
+        project.getActivityByName(activityName).setBudgetedTime(budgetedTime, actor);
+    }
+    @Then("The budgeted time is changed")
+    public void the_budgeted_time_is_changed() {
+        Activity activity = project.getActivityByName(activityName);
+        assertEquals(budgetedTime, activity.getBudgetedTime(), 0);
+    }
+    @Given("The employee is not a part of the activity")
+    public void the_employee_is_not_a_part_of_the_activity() {
+        extraEmployee = new Employee("Tim");
+        assertFalse(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
+    }
+    @Given("The employee is available")
+    public void the_employee_is_available() {
+        // Not implemented yet
+    }
+    @When("The project leader adds the employee to the activity")
+    public void the_project_leader_adds_the_employee_to_the_activity() {
+        project.getActivityByName(activityName).addEmployee(extraEmployee);
+    }
+    @Then("The employee is a part of the activity")
+    public void the_employee_is_a_part_of_the_activity() {
+        assertTrue(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
+    }
 }
