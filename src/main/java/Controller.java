@@ -110,6 +110,7 @@ public class Controller {
         projectDateChangePromptPanel.add(dayField2);
 
         JPanel createActivityPromptPanel = new JPanel();
+        JPanel createActivityPromptPanel2 = new JPanel();
 
         JTextField nameField2 = new JTextField(5);
         JTextField yearField3 = new JTextField(5);
@@ -118,6 +119,7 @@ public class Controller {
         JTextField yearField4 = new JTextField(5);
         JComboBox monthField4 = new JComboBox(months);
         JTextField dayField4 = new JTextField(5);
+        JTextField budgetedTimeField = new JTextField(5);
 
         createActivityPromptPanel.add(new JLabel("Name"));
         createActivityPromptPanel.add(nameField2);
@@ -130,16 +132,23 @@ public class Controller {
         createActivityPromptPanel.add(Box.createHorizontalStrut(20));
         createActivityPromptPanel.add(new JLabel("Start Day"));
         createActivityPromptPanel.add(dayField3);
-        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
-        createActivityPromptPanel.add(new JLabel("End Year"));
-        createActivityPromptPanel.add(yearField4);
-        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
-        createActivityPromptPanel.add(new JLabel("End Month"));
-        createActivityPromptPanel.add(monthField4);
-        createActivityPromptPanel.add(Box.createHorizontalStrut(20));
-        createActivityPromptPanel.add(new JLabel("End Day"));
-        createActivityPromptPanel.add(dayField4);
+        //createActivityPromptPanel.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel2.add(new JLabel("End Year"));
+        createActivityPromptPanel2.add(yearField4);
+        createActivityPromptPanel2.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel2.add(new JLabel("End Month"));
+        createActivityPromptPanel2.add(monthField4);
+        createActivityPromptPanel2.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel2.add(new JLabel("End Day"));
+        createActivityPromptPanel2.add(dayField4);
+        createActivityPromptPanel2.add(Box.createHorizontalStrut(20));
+        createActivityPromptPanel2.add(new JLabel("Expected Time"));
+        createActivityPromptPanel2.add(budgetedTimeField);
 
+        JPanel createActivityPromptPanel3 = new JPanel();
+        createActivityPromptPanel3.setLayout(new BoxLayout(createActivityPromptPanel3,BoxLayout.Y_AXIS));
+        createActivityPromptPanel3.add(createActivityPromptPanel);
+        createActivityPromptPanel3.add(createActivityPromptPanel2);
 
 
 
@@ -245,7 +254,7 @@ public class Controller {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == createActivityButton){
-                    int inputs = JOptionPane.showConfirmDialog(null,createActivityPromptPanel,"Enter Name, Start Date and End Date",JOptionPane.OK_CANCEL_OPTION);
+                    int inputs = JOptionPane.showConfirmDialog(null,createActivityPromptPanel3,"Enter Name, Start Date and End Date",JOptionPane.OK_CANCEL_OPTION);
                     if(inputs == JOptionPane.OK_OPTION){
                         LocalDateTime startDate = null;
                         LocalDateTime endDate = null;
@@ -258,9 +267,10 @@ public class Controller {
                         }
                         try {
                             String activityName = nameField2.getText();
+                            int budgetedTime = Integer.valueOf(budgetedTimeField.getText());
                             int index = projectFieldsJList.getSelectedIndex();
                             String currentProjectName = projectFieldsList.get(index).split(" ")[0];
-                            projectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName,startDate,endDate);
+                            projectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName,startDate,endDate,budgetedTime);
 
                             //creating a string with activity name and dates
                             String activityFields = activityName + "   " + startDate.getDayOfMonth() + "." + startDate.getMonth() + "." +
