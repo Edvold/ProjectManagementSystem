@@ -15,7 +15,8 @@ TO DO:
     RegisterHours
 
 evt. tilføje flere scenarier til editProject.
-
+evt. sætte de nuværende datoer ind i 'skift dato'-menuer og dagens dato i 'lav projekt/aktivitet'-menu
+evt. gør så budgeteret tid kun kan være halve/hele timer
 
 
 Icons:
