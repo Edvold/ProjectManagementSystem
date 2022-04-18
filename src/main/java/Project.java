@@ -87,7 +87,4 @@ public class Project {
         return projectLeader;
     }
 
-    public void emptyList() {
-        activities.clear();
-    }
 }
