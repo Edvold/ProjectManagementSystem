@@ -2,6 +2,8 @@ Feature: Create Activity
   Description: An employee creates an activity
   Actor: Employee
 
+  # Maybe only the project leader can do anything related to creating/editing activities?
+
   Scenario: Employee creates an activity with valid date
     Given The project has a start date
     And The dates are valid for activity
