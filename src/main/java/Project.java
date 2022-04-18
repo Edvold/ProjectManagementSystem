@@ -27,12 +27,12 @@ public class Project {
         this.PROJECT_NUMBER = String.valueOf(date.getYear()).substring(2) + projectNumber;
     }
 
-    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, TimeNotSetError {
+    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
         if (this.startDate == null) throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
         try {
             if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
-            activities.add(new Activity(name, startDate, endDate, this.startDate, budgetedTime));
-        } catch (InvalidDateError | TimeNotSetError e) {
+            activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
+        } catch (InvalidDateError | IllegalArgumentException e) {
             // Maybe do some stuff here - if not then delete
             throw e;
         }
@@ -50,8 +50,7 @@ public class Project {
     }
 
     public boolean hasActivityWithName(String name) {
-        if(getActivityByName(name) != null) return true;
-        return false;
+        return getActivityByName(name) != null;
     }
 
     public LocalDateTime getStartDate(){
@@ -67,7 +66,7 @@ public class Project {
     }
 
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
-        if((this.startDate != null) & (startDate.isAfter(this.startDate))){
+        if((this.startDate != null) && (startDate.isAfter(this.startDate))){
             this.startDate = startDate;
         }
         else if ((this.startDate == null) & (startDate.isAfter(LocalDateTime.now()))){
@@ -77,6 +76,11 @@ public class Project {
             throw new InvalidDateError("Invalid date");
         }
 
+    }
+
+    public void setProjectLeader(Employee projectLeader) {
+        // Maybe only the project leader can change the role?
+        this.projectLeader = projectLeader;
     }
 
     public Employee getProjectLeader() {
