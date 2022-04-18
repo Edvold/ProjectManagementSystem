@@ -69,7 +69,7 @@ public class Project {
         if((this.startDate != null) && (startDate.isAfter(this.startDate))){
             this.startDate = startDate;
         }
-        else if ((this.startDate == null) & (startDate.isAfter(LocalDateTime.now()))){
+        else if ((this.startDate == null) && (startDate.isAfter(LocalDateTime.now()))){
             this.startDate = startDate;
         }
         else {
