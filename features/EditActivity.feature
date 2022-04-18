@@ -1,39 +1,91 @@
 Feature: Edit Activity
   Description: A project leader edits an activity
-  Actor: Project leader
+  Actor: Employee
 
   Scenario: The project leader changes the start date of an activity
-    Given The project leader is the project leader for the given activity
-    And There exists an activity
+    Given There exists an activity
+    And The employee is the project leader for the given activity
     And The new start date is valid
-    When The project leader changes the start date
+    When The employee changes the start date
     Then The activity's start date is changed
 
-
   Scenario: The project leader changes the end date of an activity
-    Given The project leader is the project leader for the given activity
-    And There exists an activity
+    Given There exists an activity
+    And The employee is the project leader for the given activity
     And The new end date is valid
-    When The project leader changes the end date
+    When The employee changes the end date
     Then The activity's end date is changed
 
-  # IMPLEMENT SCENARIOS WITH INVALID DATES AND NOT PROJECT LEADER
+  Scenario: The project leader changes the start date of an activity to a date before today
+    Given There exists an activity
+    And The employee is the project leader for the given activity
+    And The start date is before today
+    When The employee changes the start date
+    Then An error is raised with message "The start date cannot be before today"
 
-  Scenario: The project leader changes the budgeted time
-    Given The project leader is the project leader for the given activity
+  Scenario: The project leader changes the start date of an activity to a date before the start date of the project
+    Given The project has a start date a few days after today
     And There exists an activity
+    And The employee is the project leader for the given activity
+    # Now set the new start date to be after today but before the project start date
+    And The start date is between today and project start date
+    When The employee changes the start date
+    Then An error is raised with message "The start date cannot be before the start date of the project"
+
+  Scenario: The project leader changes the end date of an activity to an invalid date
+    Given There exists an activity
+    And The employee is the project leader for the given activity
+    And The end date is invalid
+    When The employee changes the end date
+    Then An error is raised with message "The end date cannot be before the start date"
+
+  Scenario: An employee who is not the project leader changes the dates
+    Given There exists an activity
+    And The employee is not the project leader
+    When The employee changes the dates
+    Then An error is raised with message "Only the project leader can change the data of an activity"
+  
+  Scenario: The project leader changes the budgeted time
+    Given There exists an activity
+    And The employee is the project leader for the given activity
     And The given time is valid
-    When The project leader changes the budgeted time
+    When The employee changes the budgeted time
     Then The budgeted time is changed
 
-  # IMPLEMENT TEST WITH INVALID BUDGETED TIME
+  Scenario: The project leader changes the budgeted time to an invalid time
+    Given There exists an activity
+    And The employee is the project leader for the given activity
+    And The budgeted time is invalid
+    When The employee changes the budgeted time
+    Then An error is raised with message "Budgeted time has to be bigger than 0"
+
+  Scenario: An employee who is not the project leader changes the budgeted time
+    Given There exists an activity
+    And The employee is not the project leader
+    When The employee changes the budgeted time
+    Then An error is raised with message "Only the project leader can change the data of an activity"
 
   Scenario: The project leader adds an employee to an activity
-    Given The project leader is the project leader for the given activity
-    And There exists an activity
+    Given There exists an activity
+    And The employee is the project leader for the given activity
     And The employee is not a part of the activity
     And The employee is available
-    When The project leader adds the employee to the activity
-    Then The employee is a part of the activity
+    # Now the project leader adds the employee to the activity
+    When The employee adds the employee to the activity
+    Then The employee is now a part of the activity
 
-  # IMPLEMENT TEST WHERE EMPLOYEE IS ALREADY PART OF ACTIVITY
+  Scenario: The project leader adds an employee to an activity
+    Given There exists an activity
+    And The employee is the project leader for the given activity
+    And The employee is a part of the activity
+    # Now the project leader adds the employee to the activity
+    When The employee adds the employee to the activity
+    Then An error is raised with message "The employee is already a part of the activity"
+
+  Scenario: An employee who is not the project leader adds an employee to an activity
+    Given There exists an activity
+    And The employee is not the project leader
+    When The employee adds the employee to the activity
+    Then An error is raised with message "Only the project leader can change the data of an activity"
+
+  # Missing scenario for employee not available

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ActivitySteps {
 
@@ -22,25 +23,40 @@ public class ActivitySteps {
     private Employee actor;
     private Employee extraEmployee;
 
-    public ActivitySteps(ErrorMessageHolder errorMessageHolder) {
+    public ActivitySteps(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError{
         this.errorMessageHolder = errorMessageHolder;
+        createProject(0);
     }
 
     private void createProject(int daysInTheFuture) throws DuplicateNameError, InvalidDateError {
         ProjectManager.getInstance().emptyList();
         ProjectManager.getInstance().createProject(LocalDateTime.now().plusDays(daysInTheFuture), "Dummy");
         project = ProjectManager.getInstance().getProjectByName("Dummy");
+        projectLeader = new Employee("Carl");
+        actor = new Employee("James");
+    }
+
+    // Helper methods
+    private boolean isDayBeforeDate(LocalDateTime startDate) {
+        // Both start date and end date are before today. Truncating to only compare dates and not time of the day as well
+        return startDate.truncatedTo(ChronoUnit.DAYS).compareTo(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)) < 0;
+    }
+
+    private boolean isDayBeforeDate(LocalDateTime startDate, LocalDateTime endDate) {
+        return startDate.truncatedTo(ChronoUnit.DAYS).compareTo(endDate.truncatedTo(ChronoUnit.DAYS)) < 0;
+    }
+
+    private boolean areDatesValid(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime projectStartDate) {
+        return !(isDayBeforeDate(endDate, startDate)  && isDayBeforeDate(startDate) && !isDayBeforeDate(startDate, projectStartDate));
     }
 
     @Given("The project has a start date")
-    public void the_project_has_a_start_date() throws DuplicateNameError, InvalidDateError{
-        createProject(0);
+    public void the_project_has_a_start_date(){
         assertNotNull(project.getStartDate());
     }
 
     @Given("The dates are valid for activity")
     public void the_dates_are_valid_for_activity() {
-        project.emptyList();
         activityStartDate = LocalDateTime.now();
         activityEndDate = LocalDateTime.now().plusDays(20);
         assertTrue(areDatesValid(activityStartDate, activityEndDate, project.getStartDate()));
@@ -81,18 +97,6 @@ public class ActivitySteps {
         assertNotNull(project.getActivityByName(activityName));
     }
 
-    private boolean isDayBeforeDate(LocalDateTime startDate) {
-        // Both start date and end date are before today. Truncating to only compare dates and not time of the day as well
-        return startDate.truncatedTo(ChronoUnit.DAYS).compareTo(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)) < 0;
-    }
-
-    private boolean isDayBeforeDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return startDate.truncatedTo(ChronoUnit.DAYS).compareTo(endDate.truncatedTo(ChronoUnit.DAYS)) < 0;
-    }
-
-    private boolean areDatesValid(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime projectStartDate) {
-        return !(isDayBeforeDate(endDate, startDate)  && isDayBeforeDate(startDate) && !isDayBeforeDate(startDate, projectStartDate));
-    }
     @Given("The project has a start date a few days after today")
     public void the_project_has_a_start_date_a_few_days_after_today() throws DuplicateNameError, InvalidDateError {
         createProject(3);
@@ -108,7 +112,6 @@ public class ActivitySteps {
 
     @Given("The start date is before today")
     public void the_start_date_is_before_today() {
-        project.emptyList();
         activityStartDate = LocalDateTime.now().minusDays(5);
         activityEndDate = LocalDateTime.now().plusDays(5);
         assertTrue(isDayBeforeDate(activityStartDate)); // start date is invalid
@@ -116,7 +119,6 @@ public class ActivitySteps {
     }
     @Given("The end date is invalid")
     public void the_end_date_is_invalid() {
-        project.emptyList();
         activityStartDate = LocalDateTime.now().plusDays(5);
         activityEndDate = LocalDateTime.now().plusDays(3);
         // The start date is after the end date
@@ -126,7 +128,6 @@ public class ActivitySteps {
     @Given("Another activity in the project exists with the same name")
     public void another_activity_in_the_project_exists_with_the_same_name() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
         createProject(0);
-        project.emptyList();
         activityStartDate = LocalDateTime.now();
         activityEndDate = LocalDateTime.now().plusDays(20);
         budgetedTime = 20;
@@ -160,20 +161,16 @@ public class ActivitySteps {
         assertFalse(budgetedTime > 0);
     }
 
-    @Given("The project leader is the project leader for the given activity")
-    public void the_project_leader_is_the_project_leader_for_the_given_activity() throws DuplicateNameError, InvalidDateError {
-        // Actually needs to check if the current user is the project leader
-        createProject(0);
-        projectLeader = new Employee("Carl");
+    @Given("The employee is the project leader for the given activity")
+    public void the_employee_is_the_project_leader_for_the_given_activity() {
         actor = projectLeader;
         project.setProjectLeader(projectLeader);
         assertEquals(project.getProjectLeader(), actor);
     }
     @Given("There exists an activity")
     public void there_exists_an_activity() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
-        project.emptyList();
-        activityStartDate = LocalDateTime.now();
-        activityEndDate = LocalDateTime.now().plusDays(20);
+        activityStartDate = project.getStartDate();
+        activityEndDate = activityStartDate.plusDays(20);
         budgetedTime = 20;
         project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
         assertTrue(project.hasActivityWithName(activityName));
@@ -183,10 +180,15 @@ public class ActivitySteps {
         activityStartDate = activityStartDate.plusDays(1);
         assertTrue(areDatesValid(activityStartDate, activityEndDate, project.getStartDate()));
     }
-    @When("The project leader changes the start date")
-    public void the_project_leader_changes_the_start_date() throws MissingRequiredPermissionError, InvalidDateError {
+    @When("The employee changes the start date")
+    public void the_employee_changes_the_start_date() {
         Activity activity = project.getActivityByName(activityName);
-        activity.changeDates(activityStartDate, activityEndDate, actor);
+
+        try {
+            activity.changeDates(activityStartDate, activityEndDate, actor);
+        } catch (InvalidDateError | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
 
     }
     @Then("The activity's start date is changed")
@@ -198,10 +200,14 @@ public class ActivitySteps {
         activityEndDate = activityEndDate.plusDays(1);
         assertTrue(areDatesValid(activityStartDate, activityEndDate, project.getStartDate()));
     }
-    @When("The project leader changes the end date")
-    public void the_project_leader_changes_the_end_date() throws MissingRequiredPermissionError, InvalidDateError {
+    @When("The employee changes the end date")
+    public void the_employee_changes_the_end_date() {
         Activity activity = project.getActivityByName(activityName);
-        activity.changeDates(activityStartDate, activityEndDate, actor);
+        try {
+            activity.changeDates(activityStartDate, activityEndDate, actor);
+        } catch (InvalidDateError | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
     }
     @Then("The activity's end date is changed")
     public void the_activity_s_end_date_is_changed() {
@@ -212,9 +218,13 @@ public class ActivitySteps {
         budgetedTime = 1;
         assertTrue(budgetedTime > 0);
     }
-    @When("The project leader changes the budgeted time")
-    public void the_project_leader_changes_the_budgeted_time() throws MissingRequiredPermissionError, IllegalArgumentException {
-        project.getActivityByName(activityName).setBudgetedTime(budgetedTime, actor);
+    @When("The employee changes the budgeted time")
+    public void the_project_leader_changes_the_budgeted_time() {
+        try {
+            project.getActivityByName(activityName).setBudgetedTime(budgetedTime, actor);
+        } catch (IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
     }
     @Then("The budgeted time is changed")
     public void the_budgeted_time_is_changed() {
@@ -230,12 +240,41 @@ public class ActivitySteps {
     public void the_employee_is_available() {
         // Not implemented yet
     }
-    @When("The project leader adds the employee to the activity")
-    public void the_project_leader_adds_the_employee_to_the_activity() {
-        project.getActivityByName(activityName).addEmployee(extraEmployee);
+    @When("The employee adds the employee to the activity")
+    public void the_employee_adds_the_employee_to_the_activity() {
+        try {
+            project.getActivityByName(activityName).addEmployee(extraEmployee, actor);
+        } catch (IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
     }
-    @Then("The employee is a part of the activity")
+    @Then("The employee is now a part of the activity")
+    public void the_employee_is_now_a_part_of_the_activity() {
+        assertTrue(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
+    }
+    @Given("The employee is not the project leader")
+    public void the_employee_is_not_the_project_leader() {
+        assertNotEquals(projectLeader, actor);
+
+    }
+    @When("The employee changes the dates")
+    public void the_employee_changes_the_dates() {
+        activityStartDate = activityStartDate.plusDays(1);
+        activityEndDate = activityEndDate.plusDays(1);
+        try {
+            project.getActivityByName(activityName).changeDates(activityStartDate, activityEndDate, actor);
+        } catch (InvalidDateError |MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+    }
+    @Given("The employee is a part of the activity")
     public void the_employee_is_a_part_of_the_activity() {
+        extraEmployee = new Employee("Charles");
+        try {
+            project.getActivityByName(activityName).addEmployee(extraEmployee, actor);
+        } catch (IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
         assertTrue(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
     }
 }
