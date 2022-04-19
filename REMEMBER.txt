@@ -2,6 +2,7 @@ PUT STUFF TO REMEMBER HERE
 
 Husk at opdatere diagrammer/ lave sekvensdiagrammer ordentligt.
 Overvej login-forside i stedet for prompts
+Husk design by contract
 
 
 TO DO:
