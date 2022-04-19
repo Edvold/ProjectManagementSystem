@@ -36,6 +36,7 @@ public class Activity {
     }
 
     private static String getCorrectInvalidDateError(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime projectStartDate) {
+        if (startDate == null || endDate == null) return "There is missing information about the dates";
         if (isDayBeforeDate(endDate, startDate)) return "The end date cannot be before the start date"; // END DATE BEFORE START
         if (isDayBeforeDate(startDate)) return "The start date cannot be before today"; // START DATE BEFORE TODAY
         if (isDayBeforeDate(startDate, projectStartDate)) return "The start date cannot be before the start date of the project"; // START DATE BEFORE PROJECT START DATE
