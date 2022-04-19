@@ -69,15 +69,8 @@ public class Project {
     }
 
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
-        if((this.startDate != null) && (startDate.isAfter(this.startDate))){
-            this.startDate = startDate;
-        }
-        else if ((this.startDate == null) && (startDate.isAfter(LocalDateTime.now()))){
-            this.startDate = startDate;
-        }
-        else {
-            throw new InvalidDateError("Invalid date");
-        }
+        if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("Invalid date");
+        this.startDate = startDate;
 
     }
 
