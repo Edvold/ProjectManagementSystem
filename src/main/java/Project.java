@@ -68,6 +68,17 @@ public class Project {
         return PROJECT_NUMBER;
     }
 
+    public LocalDateTime getLastEndDate() {
+        LocalDateTime lastDate = activities.get(0).getEndDate();
+
+        for (int i = 1; i < activities.size(); i++) {
+            LocalDateTime date = activities.get(i).getEndDate();
+            if (lastDate.isBefore(date)) lastDate = date;
+        }
+
+        return lastDate;
+    }
+
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
         if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("Invalid date");
         this.startDate = startDate;
