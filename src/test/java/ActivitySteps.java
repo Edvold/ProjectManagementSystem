@@ -238,7 +238,7 @@ public class ActivitySteps {
     }
     @Given("The employee is available")
     public void the_employee_is_available() {
-        // Not implemented yet
+        assertTrue(extraEmployee.isAvailable(activityStartDate, activityEndDate));
     }
     @When("The employee adds the employee to the activity")
     public void the_employee_adds_the_employee_to_the_activity() {
