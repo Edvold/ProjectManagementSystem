@@ -14,6 +14,7 @@ public class Controller {
 
         List<String> projectFieldsList = new ArrayList<>();
         String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String[] monthsNoDate = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "No Date"};
 
         ProjectManager projectManager = ProjectManager.getInstance();
         Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -50,7 +51,7 @@ public class Controller {
 
         JTextField nameField = new JTextField(5);
         JTextField yearField = new JTextField(5);
-        JComboBox monthField = new JComboBox(months);
+        JComboBox monthField = new JComboBox(monthsNoDate);
         JTextField dayField = new JTextField(5);
 
         projectCreationPromptPanel.add(new JLabel("Name:"));
@@ -166,30 +167,52 @@ public class Controller {
                     int inputs = JOptionPane.showConfirmDialog(null,projectCreationPromptPanel,"Enter name and date",JOptionPane.OK_CANCEL_OPTION);
                     if(inputs == JOptionPane.OK_OPTION){
                         LocalDateTime projectDate = null;
-                        try {
-                            projectDate = LocalDateTime.of(Integer.valueOf(yearField.getText()),monthField.getSelectedIndex()+1,Integer.valueOf(dayField.getText()),0,0 );
-                        }
-                        catch (Exception error){
-                            JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
-                        }
                         String projectName = nameField.getText();
-                        try {
-                            projectManager.getInstance().createProject(projectDate, projectName);
+                        if(yearField.getText().equals("") & monthField.getSelectedIndex() == monthsNoDate.length-1 & dayField.getText().equals("")){
+                            try {
+                                projectManager.getInstance().createProject(projectName);
 
-                            //creating a string with project name, date and number
-                            String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
-                                    projectDate.getYear() + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
-                            projectFieldsList.add(projectFields);
-                            projectFieldsJList.setListData(projectFieldsList.toArray());
+                                //creating a string with project name and number
+                                String projectFields = projectName + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                                projectFieldsList.add(projectFields);
+                                projectFieldsJList.setListData(projectFieldsList.toArray());
 
-                            // only clearing optionpane if project is created
-                            nameField.setText("");
-                            yearField.setText("");
-                            dayField.setText("");
-                            monthField.setSelectedIndex(0);
-                        } catch (DuplicateNameError | InvalidDateError ex) {
-                            JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                                // only clearing optionpane if project is created
+                                nameField.setText("");
+                                yearField.setText("");
+                                dayField.setText("");
+                                monthField.setSelectedIndex(0);
+                            } catch (DuplicateNameError ex) {
+                                JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                            }
                         }
+                        else {
+                            try {
+                                projectDate = LocalDateTime.of(Integer.valueOf(yearField.getText()),monthField.getSelectedIndex()+1,Integer.valueOf(dayField.getText()),0,0 );
+                            }
+                            catch (Exception error){
+                                JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            try {
+                                projectManager.getInstance().createProject(projectDate, projectName);
+
+                                //creating a string with project name, date and number
+                                String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
+                                        projectDate.getYear() + "   " + projectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                                projectFieldsList.add(projectFields);
+                                projectFieldsJList.setListData(projectFieldsList.toArray());
+
+                                // only clearing optionpane if project is created
+                                nameField.setText("");
+                                yearField.setText("");
+                                dayField.setText("");
+                                monthField.setSelectedIndex(0);
+                            } catch (DuplicateNameError | InvalidDateError ex) {
+                                JOptionPane.showMessageDialog(null,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
                     }
                 }
             }
