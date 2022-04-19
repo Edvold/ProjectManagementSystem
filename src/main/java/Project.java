@@ -1,3 +1,5 @@
+import io.cucumber.java.sl.In;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class Project {
     private ArrayList<Employee> employeeList = new ArrayList<>();
 
     public Project(LocalDateTime date, String projectName, String projectNumber) throws InvalidDateError {
+        if (date == null) throw new InvalidDateError("There is missing information about the date");
         if(date.truncatedTo(ChronoUnit.DAYS).compareTo(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)) < 0){
             // date is before creation date
             throw new InvalidDateError("Invalid date");
