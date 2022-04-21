@@ -33,6 +33,7 @@ public class ActivitySteps {
         ProjectManager.getInstance().createProject(LocalDateTime.now().plusDays(daysInTheFuture), "Dummy");
         project = ProjectManager.getInstance().getProjectByName("Dummy");
         projectLeader = new Employee("Carl");
+        project.setProjectLeader(projectLeader);
         actor = new Employee("James");
     }
 
@@ -54,7 +55,11 @@ public class ActivitySteps {
     public void the_project_has_a_start_date(){
         assertNotNull(project.getStartDate());
     }
-
+    @Given("The employee is the project leader")
+    public void the_employee_is_the_project_leader() {
+        actor = projectLeader;
+        assertEquals(actor, projectLeader);
+    }
     @Given("The dates are valid for activity")
     public void the_dates_are_valid_for_activity() {
         activityStartDate = LocalDateTime.now();
@@ -87,8 +92,8 @@ public class ActivitySteps {
     @When("The employee creates an activity")
     public void the_employee_creates_an_activity() {
         try {
-            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
-        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException e) {
+            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime, actor);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
@@ -126,19 +131,24 @@ public class ActivitySteps {
     }
 
     @Given("Another activity in the project exists with the same name")
-    public void another_activity_in_the_project_exists_with_the_same_name() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
-        createProject(0);
-        activityStartDate = LocalDateTime.now();
-        activityEndDate = LocalDateTime.now().plusDays(20);
-        budgetedTime = 20;
-        project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
+    public void another_activity_in_the_project_exists_with_the_same_name() {
+
+        try {
+            createProject(0);
+            activityStartDate = LocalDateTime.now();
+            activityEndDate = LocalDateTime.now().plusDays(20);
+            budgetedTime = 20;
+            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime, actor);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
         assertTrue(project.hasActivityWithName(activityName));
     }
     @When("An employee creates an activity with the same name")
-    public void an_employee_creates_an_activity_with_the_same_name() throws InvalidDateError, DateNotInitializedError, IllegalArgumentException {
+    public void an_employee_creates_an_activity_with_the_same_name() {
         try {
-            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
-        } catch (DuplicateNameError e) {
+            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime, actor);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
@@ -168,11 +178,15 @@ public class ActivitySteps {
         assertEquals(project.getProjectLeader(), actor);
     }
     @Given("There exists an activity")
-    public void there_exists_an_activity() throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
+    public void there_exists_an_activity() {
         activityStartDate = project.getStartDate();
         activityEndDate = activityStartDate.plusDays(20);
         budgetedTime = 20;
-        project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime);
+        try {
+            project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime, projectLeader);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
         assertTrue(project.hasActivityWithName(activityName));
     }
     @Given("The new start date is valid")
