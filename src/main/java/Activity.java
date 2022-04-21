@@ -77,6 +77,7 @@ public class Activity {
         if (!actor.equals(project.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         if (isEmployeeWorkingOnActivity(employee)) throw new IllegalArgumentException("The employee is already a part of the activity");
         employeeList.add(employee);
+        employee.addActivity(this);
     }
 
     public boolean isEmployeeWorkingOnActivity(Employee employee) {
