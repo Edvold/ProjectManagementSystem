@@ -30,15 +30,11 @@ public class Project {
         this.PROJECT_NUMBER = String.valueOf(date.getYear()).substring(2) + projectNumber;
     }
 
-    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException {
+    public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime, Employee actor) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException, MissingRequiredPermissionError {
+        if (!actor.equals(projectLeader)) throw new MissingRequiredPermissionError("Only the project leader can create an activity");
         if (this.startDate == null) throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
-        try {
-            if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
-            activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
-        } catch (InvalidDateError | IllegalArgumentException e) {
-            // Maybe do some stuff here - if not then delete
-            throw e;
-        }
+        if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
+        activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
     }
 
     public Activity getActivityByName(String name) {
