@@ -29,12 +29,13 @@ public class ActivitySteps {
     }
 
     private void createProject(int daysInTheFuture) throws DuplicateNameError, InvalidDateError {
+        // for when just a basic project is needed
         ProjectManager.getInstance().emptyList();
         ProjectManager.getInstance().createProject(LocalDateTime.now().plusDays(daysInTheFuture), "Dummy");
         project = ProjectManager.getInstance().getProjectByName("Dummy");
-        projectLeader = new Employee("Carl");
+        if (projectLeader == null) projectLeader = new Employee("Carl");
         project.setProjectLeader(projectLeader);
-        actor = new Employee("James");
+        if (actor == null) actor = new Employee("James");
     }
 
     // Helper methods
@@ -58,6 +59,7 @@ public class ActivitySteps {
     @Given("The employee is the project leader")
     public void the_employee_is_the_project_leader() {
         actor = projectLeader;
+        project.setProjectLeader(actor);
         assertEquals(actor, projectLeader);
     }
     @Given("The dates are valid for activity")
@@ -169,13 +171,6 @@ public class ActivitySteps {
     public void the_budgeted_time_is_invalid() {
         budgetedTime = 0;
         assertFalse(budgetedTime > 0);
-    }
-
-    @Given("The employee is the project leader for the given activity")
-    public void the_employee_is_the_project_leader_for_the_given_activity() {
-        actor = projectLeader;
-        project.setProjectLeader(projectLeader);
-        assertEquals(project.getProjectLeader(), actor);
     }
     @Given("There exists an activity")
     public void there_exists_an_activity() {
