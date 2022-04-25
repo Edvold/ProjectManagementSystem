@@ -17,7 +17,7 @@ public class EmployeeTest {
     private Employee projectLeader;
     private Activity activity;
 
-    public EmployeeTest(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError, DateNotInitializedError, MissingRequiredPermissionError {
+    public EmployeeTest(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError, DateNotInitializedError, MissingRequiredPermissionError, EmployeeIsUnavailableError {
         this.errorMessageHolder = errorMessageHolder;
         actor = new Employee("Jeff");
         projectLeader = new Employee("Tristan");
