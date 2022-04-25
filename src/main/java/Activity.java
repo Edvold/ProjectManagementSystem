@@ -84,4 +84,7 @@ public class Activity {
         return employeeList.contains(employee);
     }
 
+    public Project getProject() {
+        return project;
+    }
 }
