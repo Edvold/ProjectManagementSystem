@@ -19,6 +19,7 @@ public class Employee {
         List<Project> projects = ProjectManager.getInstance().getProjects();
 
         for (Project project : projects) {
+            if (project.getProjectLeader() == null) continue;
             if (!project.getProjectLeader().equals(this)) continue;
             if (isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
         }
