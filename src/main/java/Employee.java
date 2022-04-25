@@ -7,7 +7,6 @@ public class Employee {
 
     private String name;
     private HashMap<Activity, Double> activityHours = new HashMap<>();
-    private ArrayList<Project> projects = new ArrayList<>();
 
     private final String NOT_WORKING_ON_ACTIVITY_ERROR = "You don't work on this activity";
     private final String ILLEGAL_HOURS_AMOUNT_ERROR = "You need to input a positive amount of hours";
@@ -17,15 +16,14 @@ public class Employee {
     }
 
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
-        for (Project project : projects) {
-            if(!project.getProjectLeader().equals(this)) continue;
-
-            if(isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
-        }
 
         Set<Activity> activities = activityHours.keySet();
 
         for (Activity activity : activities) {
+            Project project = activity.getProject();
+            if (project.getProjectLeader().equals(this)) {
+                if(isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
+            }
             if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
         }
 
@@ -38,7 +36,6 @@ public class Employee {
 
     public void addActivity(Activity activity) throws IllegalArgumentException {
         if (isWorkingOnActivity(activity)) throw new IllegalArgumentException("The employee is already working on this project");
-        projects.add(activity.getProject());
         activityHours.put(activity, 0d);
     }
 
@@ -68,4 +65,5 @@ public class Employee {
     public String getName() {
         return name;
     }
+
 }
