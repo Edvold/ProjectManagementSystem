@@ -1,5 +1,5 @@
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -16,14 +16,17 @@ public class Employee {
     }
 
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Project> projects = ProjectManager.getInstance().getProjects();
+
+        for (Project project : projects) {
+            if (!project.getProjectLeader().equals(this)) continue;
+            if (isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
+        }
 
         Set<Activity> activities = activityHours.keySet();
 
         for (Activity activity : activities) {
-            Project project = activity.getProject();
-            if (project.getProjectLeader().equals(this)) {
-                if(isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
-            }
+
             if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
         }
 
