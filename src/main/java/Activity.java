@@ -78,8 +78,6 @@ public class Activity {
         if (isEmployeeWorkingOnActivity(employee)) throw new IllegalArgumentException("The employee is already a part of the activity");
         employeeList.add(employee);
         employee.addActivity(this);
-
-        employee.addActivity(this);
     }
 
     public boolean isEmployeeWorkingOnActivity(Employee employee) {
