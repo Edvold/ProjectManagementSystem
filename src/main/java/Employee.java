@@ -6,20 +6,24 @@ import java.util.Set;
 public class Employee {
 
     private String name;
-    private HashMap<Project, Double> projectHours = new HashMap<>();
-    private ArrayList<Activity> activities = new ArrayList<>();
+    private HashMap<Activity, Double> activityHours = new HashMap<>();
+    private ArrayList<Project> projects = new ArrayList<>();
+
+    private final String NOT_WORKING_ON_ACTIVITY_ERROR = "You don't work on this activity";
+    private final String ILLEGAL_HOURS_AMOUNT_ERROR = "You need to input a positive amount of hours";
 
     public Employee(String name) {
         this.name = name;
     }
 
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
-        Set<Project> projects = projectHours.keySet();
         for (Project project : projects) {
             if(!project.getProjectLeader().equals(this)) continue;
 
             if(isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
         }
+
+        Set<Activity> activities = activityHours.keySet();
 
         for (Activity activity : activities) {
             if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
@@ -32,28 +36,33 @@ public class Employee {
         return (eventStartDate.isAfter(startDate) && eventStartDate.isBefore(endDate)) || (eventEndDate.isBefore(endDate) && eventStartDate.isAfter(startDate));
     }
 
-    public void addActivity(Activity activity) {
-        activities.add(activity);
+    public void addActivity(Activity activity) throws IllegalArgumentException {
+        if (isWorkingOnActivity(activity)) throw new IllegalArgumentException("The employee is already working on this project");
+        projects.add(activity.getProject());
+        activityHours.put(activity, 0d);
     }
 
     public boolean isWorkingOnActivity(Activity activity) {
-        return activities.contains(activity);
+        return activityHours.containsKey(activity);
     }
 
-    public Project getProjectByActivity(Activity activity) {
-        Set<Project> projectSet = projectHours.keySet();
-        for (Project project : projectSet) {
-            if (project.hasActivity(activity)) {
-                return project;
-            }
-        }
-        return null;
+    public void registerHours(Activity activity, double hours) throws IllegalArgumentException {
+        if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
+        if (hours <= 0) throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
+        activityHours.compute(activity, (k, v) -> v + hours);
+
     }
 
-    public void registerHours(Activity activity, double hours) {
-        Project project = getProjectByActivity(activity);
-        projectHours.computeIfPresent(project, (k, v) -> v + hours);
+    public void unregisterHours(Activity activity, double hours) throws IllegalArgumentException {
+        if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
+        if (hours <= 0) throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
+        if (activityHours.get(activity) < hours) activityHours.put(activity, 0d);
+        else activityHours.compute(activity, (k, v) -> v - hours);
+    }
 
+    public double getHours(Activity activity) {
+        if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
+        return activityHours.get(activity);
     }
 
     public String getName() {
