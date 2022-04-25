@@ -23,12 +23,12 @@ public class ActivitySteps {
     private Employee actor;
     private Employee extraEmployee;
 
-    public ActivitySteps(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError{
+    public ActivitySteps(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError {
         this.errorMessageHolder = errorMessageHolder;
         createProject(0);
     }
 
-    private void createProject(int daysInTheFuture) throws DuplicateNameError, InvalidDateError {
+    private void createProject(int daysInTheFuture) throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError {
         // for when just a basic project is needed
         ProjectManager.getInstance().emptyList();
         ProjectManager.getInstance().createProject(LocalDateTime.now().plusDays(daysInTheFuture), "Dummy");
@@ -57,9 +57,8 @@ public class ActivitySteps {
         assertNotNull(project.getStartDate());
     }
     @Given("The employee is the project leader")
-    public void the_employee_is_the_project_leader() {
+    public void the_employee_is_the_project_leader() throws EmployeeIsUnavailableError {
         actor = projectLeader;
-        project.setProjectLeader(actor);
         assertEquals(actor, projectLeader);
     }
     @Given("The dates are valid for activity")
@@ -105,7 +104,7 @@ public class ActivitySteps {
     }
 
     @Given("The project has a start date a few days after today")
-    public void the_project_has_a_start_date_a_few_days_after_today() throws DuplicateNameError, InvalidDateError {
+    public void the_project_has_a_start_date_a_few_days_after_today() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError {
         createProject(3);
         assertTrue(project.getStartDate().compareTo(LocalDateTime.now()) > 2); // More than two days difference
     }
@@ -141,7 +140,7 @@ public class ActivitySteps {
             activityEndDate = LocalDateTime.now().plusDays(20);
             budgetedTime = 20;
             project.createActivity(activityName, activityStartDate, activityEndDate, budgetedTime, actor);
-        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError | EmployeeIsUnavailableError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
         assertTrue(project.hasActivityWithName(activityName));

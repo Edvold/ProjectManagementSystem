@@ -21,7 +21,7 @@ public class Employee {
         for (Project project : projects) {
             if (project.getProjectLeader() == null) continue;
             if (!project.getProjectLeader().equals(this)) continue;
-            if (isBetweenDates(project.getStartDate(), project.getLastEndDate(), startDate, endDate)) return false;
+            if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate)) return false;
         }
 
         Set<Activity> activities = activityHours.keySet();
@@ -35,7 +35,7 @@ public class Employee {
     }
 
     private boolean isBetweenDates(LocalDateTime eventStartDate, LocalDateTime eventEndDate, LocalDateTime startDate, LocalDateTime endDate) {
-        return (eventStartDate.isAfter(startDate) && eventStartDate.isBefore(endDate)) || (eventEndDate.isBefore(endDate) && eventStartDate.isAfter(startDate));
+        return (!eventStartDate.isBefore(startDate) && !eventStartDate.isAfter(endDate)) || (!eventEndDate.isAfter(endDate) && !eventStartDate.isBefore(startDate));
     }
 
     public void addActivity(Activity activity) throws IllegalArgumentException {
