@@ -58,17 +58,10 @@ public class Controller {
         view.startFrame.requestFocusInWindow();
     }
 
-    public void changeToActivityScreen(KeyEvent e) {
+    public void changeToProjectScreen(KeyEvent e) {
         if ((e.getKeyCode() == KeyEvent.VK_ENTER) & (view.projectFieldsJList.getSelectedIndex() >= 0)) {
-                    view.screens[currentScreen].setVisible(false);
-                    if (currentScreen < 2) {
-                        currentScreen++;
-                    } else {
-                        currentScreen = 0;
-                    }
-                    view.screens[currentScreen].setVisible(true);
-                    view.projectCreationPromptPanel.clear();
-                }
+            changeScreen();
+        }
         view.startFrame.requestFocusInWindow();
     }
 
@@ -111,7 +104,9 @@ public class Controller {
                 double budgetedTime = view.createActivityPromptPanel.getExpectedTime();
                 int index = view.projectFieldsJList.getSelectedIndex();
                 String currentProjectName = view.projectFieldsList.get(index).split(" ")[0];
-                ProjectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName, startDate, endDate, budgetedTime, view.createActivityPromptPanel.getEmployee());
+                String employeeName = view.createActivityPromptPanel.getEmployeeName();
+                Employee employee = EmployeeManager.getInstance().getEmployeeByName(employeeName);
+                ProjectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName, startDate, endDate, budgetedTime, employee);
 
                 //creating a string with activity name and dates
                 String activityFields = activityName + "   " + startDate.getDayOfMonth() + "." + startDate.getMonth() + "." +
@@ -131,6 +126,32 @@ public class Controller {
         view.startFrame.requestFocusInWindow();
     }
 
+    public void addAProjectLeader(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.addAProjectLeaderPromptPanel, "Enter Initials of new Project Leader", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            String employeeName = view.addAProjectLeaderPromptPanel.getInput();
+            int index = view.projectFieldsJList.getSelectedIndex();
+            String projectName = view.projectFieldsList.get(index).split(" ")[0];
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            try {
+                Employee projectLeader = EmployeeManager.getInstance().getEmployeeByName(employeeName);
+                currentProject.setProjectLeader(projectLeader);
+                view.addAProjectLeaderPromptPanel.clear();
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        view.startFrame.requestFocusInWindow();
+    }
+
+    public void changeToActivityScreen(KeyEvent e){
+        if ((e.getKeyCode() == KeyEvent.VK_ENTER) & (view.activityFieldsJList.getSelectedIndex() >= 0)) {
+            changeScreen();
+        }
+        view.startFrame.requestFocusInWindow();
+    }
+
     public void goToPreviousScreen(KeyEvent e){
         if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)) {
             view.screens[currentScreen].setVisible(false);
@@ -141,6 +162,87 @@ public class Controller {
             view.projectCreationPromptPanel.clear();
             view.createActivityPromptPanel.clear();
             view.projectDateChangePromptPanel.clear();
+        }
+        view.startFrame.requestFocusInWindow();
+    }
+
+    private void changeScreen(){
+        view.screens[currentScreen].setVisible(false);
+        if (currentScreen < 2) {
+            currentScreen++;
+        } else {
+            currentScreen = 0;
+        }
+        view.screens[currentScreen].setVisible(true);
+        view.projectCreationPromptPanel.clear();
+    }
+
+    public void addAnEmployee(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.addEmployeePromptPanel, "Enter Initials of Employee to be added and Your Initials", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            int index1 = view.projectFieldsJList.getSelectedIndex();
+            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index2 = view.activityFieldsJList.getSelectedIndex();
+            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            Activity currentActivity = currentProject.getActivityByName(activityName);
+            String employeeName = view.addEmployeePromptPanel.getFirstField();
+            String actorName = view.addEmployeePromptPanel.getActorName();
+            try {
+                Employee employee = EmployeeManager.getInstance().getEmployeeByName(employeeName);
+                Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+                currentActivity.addEmployee(employee,actor);
+                view.addEmployeePromptPanel.clear();
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        view.startFrame.requestFocusInWindow();
+    }
+
+    public void changeActivityDates(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.activityDatesChangePromptPanel, "Enter Your Initials, Start Date and End Date", JOptionPane.OK_CANCEL_OPTION);
+        if (inputs == JOptionPane.OK_OPTION) {
+            int index1 = view.projectFieldsJList.getSelectedIndex();
+            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index2 = view.activityFieldsJList.getSelectedIndex();
+            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            Activity currentActivity = currentProject.getActivityByName(activityName);
+            String actorName = view.activityDatesChangePromptPanel.getActorName();
+            try {
+                LocalDateTime startDate = LocalDateTime.of(view.activityDatesChangePromptPanel.getStartYear(), view.activityDatesChangePromptPanel.getStartMonth(), view.activityDatesChangePromptPanel.getStartDay(), 0, 0);
+                LocalDateTime endDate = LocalDateTime.of(view.activityDatesChangePromptPanel.getEndYear(), view.activityDatesChangePromptPanel.getEndMonth(), view.activityDatesChangePromptPanel.getEndDay(), 0, 0);
+                Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+                currentActivity.changeDates(startDate,endDate,actor);
+                view.activityDatesChangePromptPanel.clear();
+            } catch (Exception error) {
+                JOptionPane.showMessageDialog(null, error.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        view.startFrame.requestFocusInWindow();
+    }
+
+    public void changeBudgetedTime(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.changeBudgetedTimePromptPanel, "Enter Budgeted Time and Your Initials", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            int index1 = view.projectFieldsJList.getSelectedIndex();
+            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index2 = view.activityFieldsJList.getSelectedIndex();
+            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            Activity currentActivity = currentProject.getActivityByName(activityName);
+            String actorName = view.changeBudgetedTimePromptPanel.getActorName();
+            try {
+                int newBudgetedTime = Integer.valueOf(view.changeBudgetedTimePromptPanel.getFirstField());
+                Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+                currentActivity.setBudgetedTime(newBudgetedTime,actor);
+                view.changeBudgetedTimePromptPanel.clear();
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
         }
         view.startFrame.requestFocusInWindow();
     }

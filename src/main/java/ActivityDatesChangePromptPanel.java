@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class CreateActivityPromptPanel extends PromptPanel {
+public class ActivityDatesChangePromptPanel extends PromptPanel{
 
     private String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private JTextField startYearField = new JTextField(5);
@@ -9,14 +9,11 @@ public class CreateActivityPromptPanel extends PromptPanel {
     private JTextField endYearField = new JTextField(5);
     private JComboBox endMonthField = new JComboBox(months);
     private JTextField endDayField = new JTextField(5);
-    private JTextField budgetedTimeField = new JTextField(5);
-    private JTextField employeeField = new JTextField(5);
-    
-    public CreateActivityPromptPanel(){
-        super("Name");
+
+    public ActivityDatesChangePromptPanel() {
+        super("Actor Initials");
         JPanel row1 = new JPanel();
         JPanel row2 = new JPanel();
-        JPanel row3 = new JPanel();
 
         row1.add(new JLabel("Start Year"));
         row1.add(startYearField);
@@ -36,19 +33,12 @@ public class CreateActivityPromptPanel extends PromptPanel {
         row2.add(new JLabel("End Day"));
         row2.add(endDayField);
 
-        row3.add(new JLabel("Budgeted Time"));
-        row3.add(budgetedTimeField);
-        row3.add(Box.createHorizontalStrut(20));
-        row3.add(new JLabel("Employee Initials"));
-        row3.add(employeeField);
-
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         this.add(row1);
         this.add(row2);
-        this.add(row3);
     }
 
-    public String getTheName(){
+    public String getActorName(){
         return super.getInput();
     }
 
@@ -76,14 +66,6 @@ public class CreateActivityPromptPanel extends PromptPanel {
         return Integer.valueOf(endDayField.getText());
     }
 
-    public double getExpectedTime(){
-        return Double.valueOf(budgetedTimeField.getText());
-    }
-
-    public String getEmployeeName(){
-        return employeeField.getText();
-    }
-
     public void clear(){
         super.clear();
         startYearField.setText("");
@@ -92,9 +74,5 @@ public class CreateActivityPromptPanel extends PromptPanel {
         endYearField.setText("");
         endMonthField.setSelectedIndex(0);
         endDayField.setText("");
-        budgetedTimeField.setText("");
-        employeeField.setText("");
     }
-
-    
 }

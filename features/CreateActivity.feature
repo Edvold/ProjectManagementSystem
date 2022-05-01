@@ -37,7 +37,7 @@ Feature: Create Activity
     When The employee creates an activity
     Then An error is raised with message "The end date cannot be before the start date"
     
-#  Scenario:  Project leader creates an activity when project has no start date
+# DELETE? Scenario:  Project leader creates an activity when project has no start date
 #    Given The project does not have a start date
 #    And The employee is the project leader
 #    When The employee creates an activity
