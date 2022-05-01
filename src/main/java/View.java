@@ -19,10 +19,18 @@ public class View {
     protected List<String> activityFieldsList = new ArrayList<>();
     protected JButton createActivityButton;
     protected JButton changeStartDateButton;
+    protected JButton addProjectLeaderButton;
     protected JList activityFieldsJList;
     protected JScrollPane activityView;
     protected ProjectDateChangePromptPanel projectDateChangePromptPanel;
     protected CreateActivityPromptPanel createActivityPromptPanel;
+    protected PromptPanel addAProjectLeaderPromptPanel;
+    protected JButton addEmployeeButton;
+    protected JButton changeActivityDatesButton;
+    protected JButton changeBudgetedTimeButton;
+    protected TwoFieldsActorPromptPanel addEmployeePromptPanel;
+    protected TwoFieldsActorPromptPanel changeBudgetedTimePromptPanel;
+    protected ActivityDatesChangePromptPanel activityDatesChangePromptPanel;
 
     //public static void main(String[] args) {
 
@@ -45,6 +53,8 @@ public class View {
         startFrame.setResizable(false);
         startFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         startFrame.setSize(screenWidth, screenHeight);
+
+        //Project Creation Screen
 
         //Button for creating project
         createProjectButton = new JButton();
@@ -74,7 +84,7 @@ public class View {
         startFrame.add(screens[0]);
 
 
-        //Activity screen
+        //Project Screen
 
         //Button for creating activity
         createActivityButton = new JButton();
@@ -96,6 +106,16 @@ public class View {
         changeStartDateButton.setForeground(new Color(0x000000));
         screens[1].add(changeStartDateButton);
 
+        //Button for adding projectLeader
+        addProjectLeaderButton = new JButton();
+        addProjectLeaderButton.setText("Add a Project Leader");
+        addProjectLeaderButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        addProjectLeaderButton.setBounds(screenWidth / 2, 0, screenWidth / 4, screenHeight / 4);
+        addProjectLeaderButton.setVisible(true);
+        addProjectLeaderButton.setBackground(new Color(0x6f6f6f));
+        addProjectLeaderButton.setForeground(new Color(0x000000));
+        screens[1].add(addProjectLeaderButton);
+
         //List of fields to display for activities
         activityFieldsJList = new JList(activityFieldsList.toArray());
         activityFieldsJList.setFont(new Font("Courier New", 0, 30));
@@ -112,8 +132,49 @@ public class View {
         //PromptPanels for the buttons
         projectDateChangePromptPanel = new ProjectDateChangePromptPanel();
         createActivityPromptPanel = new CreateActivityPromptPanel();
+        addAProjectLeaderPromptPanel = new PromptPanel("New Project Leader's Initials");
 
         startFrame.add(screens[1]);
+
+        //Activity Screen
+
+        //Button to add Employee to Activity
+        addEmployeeButton = new JButton();
+        addEmployeeButton.setText("Add Employee");
+        addEmployeeButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        addEmployeeButton.setBounds(0, 0, screenWidth / 4, screenHeight / 4);
+        addEmployeeButton.setVisible(true);
+        addEmployeeButton.setBackground(new Color(0x6f6f6f));
+        addEmployeeButton.setForeground(new Color(0x000000));
+        screens[2].add(addEmployeeButton);
+
+        //Button to change Dates for Activity
+        changeActivityDatesButton = new JButton();
+        changeActivityDatesButton.setText("Change Dates");
+        changeActivityDatesButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        changeActivityDatesButton.setBounds(screenWidth/4, 0, screenWidth / 4, screenHeight / 4);
+        changeActivityDatesButton.setVisible(true);
+        changeActivityDatesButton.setBackground(new Color(0x6f6f6f));
+        changeActivityDatesButton.setForeground(new Color(0x000000));
+        screens[2].add(changeActivityDatesButton);
+
+        //Button to change BudgetedTime for Activity
+        changeBudgetedTimeButton = new JButton();
+        changeBudgetedTimeButton.setText("Change Budgeted Time");
+        changeBudgetedTimeButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        changeBudgetedTimeButton.setBounds(screenWidth/2, 0, screenWidth / 4, screenHeight / 4);
+        changeBudgetedTimeButton.setVisible(true);
+        changeBudgetedTimeButton.setBackground(new Color(0x6f6f6f));
+        changeBudgetedTimeButton.setForeground(new Color(0x000000));
+        screens[2].add(changeBudgetedTimeButton);
+
+        //PromptPanels for the buttons
+        addEmployeePromptPanel = new TwoFieldsActorPromptPanel("Employee Initials");
+        changeBudgetedTimePromptPanel = new TwoFieldsActorPromptPanel("New Budgeted Time");
+        activityDatesChangePromptPanel = new ActivityDatesChangePromptPanel();
+
+
+        startFrame.add(screens[2]);
 
         startFrame.requestFocusInWindow();
         startFrame.setVisible(true);
@@ -121,12 +182,22 @@ public class View {
 
         createProjectButton.addActionListener(e -> controller.CreateAProject());
 
-        projectFieldsJList.addKeyListener((KeyPressedListener) e -> controller.changeToActivityScreen(e));
+        projectFieldsJList.addKeyListener((KeyPressedListener) e -> controller.changeToProjectScreen(e));
 
         changeStartDateButton.addActionListener(e -> controller.changeProjectStartDate());
 
         createActivityButton.addActionListener(e -> controller.createAnActivity());
 
+        addProjectLeaderButton.addActionListener(e -> controller.addAProjectLeader());
+
+        activityFieldsJList.addKeyListener((KeyPressedListener) e -> controller.changeToActivityScreen(e));
+
         startFrame.addKeyListener((KeyPressedListener) e -> controller.goToPreviousScreen(e));
+
+        addEmployeeButton.addActionListener(e -> controller.addAnEmployee());
+
+        changeActivityDatesButton.addActionListener(e -> controller.changeActivityDates());
+
+        changeBudgetedTimeButton.addActionListener(e -> controller.changeBudgetedTime());
     }
 }

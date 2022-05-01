@@ -8,6 +8,7 @@ Husk design by contract
 TO DO:
 - Bjarke:
     GUI
+    HUSK AT ÆNDRE I Jlists når ting ændres
     All project features
     
 - Mathias
