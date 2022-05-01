@@ -33,6 +33,7 @@ public class Project {
     }
 
     public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime, Employee actor) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException, MissingRequiredPermissionError {
+        if(actor == null) throw new IllegalArgumentException("This employee doesn't exist");
         if (!actor.equals(projectLeader)) throw new MissingRequiredPermissionError("Only the project leader can create an activity");
         if (this.startDate == null) throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
         if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
@@ -77,9 +78,14 @@ public class Project {
         this.startDate = startDate;
     }
 
-    public void setProjectLeader(Employee projectLeader) throws EmployeeIsUnavailableError {
-        if(projectLeader.isAvailable(startDate,expectedEndDate)){
-            this.projectLeader = projectLeader;
+    public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError {
+
+        if(newProjectLeader == null) {
+            throw new IllegalArgumentException("This employee doesn't exist");
+        }
+
+        if(newProjectLeader.isAvailable(startDate,expectedEndDate)){
+            this.projectLeader = newProjectLeader;
         }
         else {
             throw new EmployeeIsUnavailableError("The new project leader is unavailable for this project");
