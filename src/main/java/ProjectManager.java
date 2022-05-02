@@ -1,13 +1,13 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProjectManager {
-
-    private String projectNumber = "001";
-
     private List<Project> projectList = new ArrayList<>();
     private static ProjectManager instance;
+
+    private HashMap<Integer, Integer> projectNumberMap = new HashMap<>();
 
     private ProjectManager(){}
 
@@ -23,29 +23,27 @@ public class ProjectManager {
             throw new DuplicateNameError("Name is already in use");
         }
 
-        if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
-            projectNumber = "001";
-        }
-        projectList.add(new Project(date, projectName, projectNumber));
-        Integer i = Integer.valueOf(projectNumber);
-        i++;
+        projectList.add(new Project(date, projectName, computeProjectNumber(date.getYear())));
 
-        projectNumber = leftPadding(i, 3);
     }
 
     public void createProject(String projectName) throws DuplicateNameError {
         if(hasName(projectName)){
             throw new DuplicateNameError("Name is already in use");
         }
-        if(projectNumber.equals(String.valueOf(Integer.MAX_VALUE))){
-            projectNumber = "001";
+
+        projectList.add(new Project(projectName, computeProjectNumber(LocalDateTime.now().getYear())));
+
+    }
+
+    private String computeProjectNumber(int year) {
+        if(projectNumberMap.containsKey(year)) {
+            projectNumberMap.put(year,projectNumberMap.get(year)+1);
+        } else {
+            projectNumberMap.put(year,1);
         }
-        projectList.add(new Project(projectName, projectNumber));
-        Integer i = Integer.valueOf(projectNumber);
-        i++;
 
-        projectNumber = leftPadding(i, 3);
-
+        return leftPadding(projectNumberMap.get(year), 4);
     }
 
     private boolean hasName(String name){
