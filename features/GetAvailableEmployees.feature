@@ -1,13 +1,8 @@
 Feature: Get available employees
-  Description: See which employees are available to work at in a given time period.
-  Actor: Project leader
+  Description: See which employees are available to work on an activity.
+  Actor: Employee
 
-#  Scenario: The project leader requests available employees with valid date
-#    Given The date is valid
-#    When The project leader requests available employees
-#    Then The project leader gets a list of available employees
-#
-#  Scenario: The project leader requests available employees with invalid date
-#    Given The date is invalid
-#    When The project leader requests available employees
-#    Then An error is raised with message "Invalid date"
+  Scenario: An employee requests available employees with valid date
+    Given There exists an activity
+    When The employee requests available employees for that activity
+    Then The employee gets a list of available employees

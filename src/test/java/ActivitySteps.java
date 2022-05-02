@@ -4,6 +4,7 @@ import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -22,6 +23,7 @@ public class ActivitySteps {
     private Employee projectLeader;
     private Employee actor;
     private Employee extraEmployee;
+    private ArrayList<Employee> availableEmployees = new ArrayList<>();
 
     public ActivitySteps(ErrorMessageHolder errorMessageHolder) throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError {
         this.errorMessageHolder = errorMessageHolder;
@@ -284,5 +286,19 @@ public class ActivitySteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
         assertTrue(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
+    }
+
+    @When("The employee requests available employees for that activity")
+    public void the_employee_requests_available_employees_for_that_activity() {
+        availableEmployees = project.getActivityByName(activityName).getAvailableEmployees();
+    }
+    @Then("The employee gets a list of available employees")
+    public void the_employee_gets_a_list_of_available_employees() {
+
+        //Activity activity = project.getActivityByName(activityName);
+
+        ArrayList<Employee> actualAvailableEmployees = EmployeeManager.getInstance().getAvailableEmployees(activityStartDate, activityEndDate);
+
+        assertEquals(actualAvailableEmployees, availableEmployees);
     }
 }

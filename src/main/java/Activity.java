@@ -73,11 +73,14 @@ public class Activity {
     public LocalDateTime getEndDate() {return endDate;}
 
     public void addEmployee(Employee employee, Employee actor) throws IllegalArgumentException, MissingRequiredPermissionError {
-        // Maybe ensure that employee is part of project? But then maybe problem of helping coworkers
         if (!actor.equals(project.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         if (isEmployeeWorkingOnActivity(employee)) throw new IllegalArgumentException("The employee is already a part of the activity");
         employeeList.add(employee);
         employee.addActivity(this);
+    }
+
+    public ArrayList<Employee> getAvailableEmployees() {
+        return EmployeeManager.getInstance().getAvailableEmployees(startDate, endDate);
     }
 
     public boolean isEmployeeWorkingOnActivity(Employee employee) {
