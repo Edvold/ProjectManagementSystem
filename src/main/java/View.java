@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ public class View {
     protected JList projectFieldsJList;
     protected JScrollPane projectScrollPane;
     protected ProjectCreationPromptPanel projectCreationPromptPanel;
+    protected DefaultTableModel tableModel;
+    protected JTable projectFieldsJTable;
     protected List<String> activityFieldsList = new ArrayList<>();
     protected JButton createActivityButton;
     protected JButton changeStartDateButton;
@@ -28,11 +32,11 @@ public class View {
     protected JButton addEmployeeButton;
     protected JButton changeActivityDatesButton;
     protected JButton changeBudgetedTimeButton;
+    protected JButton registerHoursButton;
     protected TwoFieldsActorPromptPanel addEmployeePromptPanel;
     protected TwoFieldsActorPromptPanel changeBudgetedTimePromptPanel;
     protected ActivityDatesChangePromptPanel activityDatesChangePromptPanel;
-
-    //public static void main(String[] args) {
+    protected TwoFieldsActorPromptPanel registerHoursPromptPanel;
 
     public void startView() {
 
@@ -70,12 +74,21 @@ public class View {
         projectFieldsJList = new JList(projectFieldsList.toArray());
         projectFieldsJList.setFont(new Font("Courier New", 0, 30));
 
+        //initializing tableModel
+        String[] projectColumns = new String[]{"Project Name", "Start Date", "Project Number", "Project Leader"};
+        tableModel = new DefaultTableModel(projectColumns,0);
+
+        projectFieldsJTable = new JTable(tableModel);
+        projectFieldsJTable.setDefaultEditor(Object.class,null);
+       // projectFieldsJTable.setVisible(true);
+        //projectFieldsJTable.setBounds(0, screenHeight / 4, screenWidth - 20, screenHeight / 2 + screenHeight / 4 - 50);
+
         //ScrollPane displaying project fields
-        projectScrollPane = new JScrollPane(projectFieldsJList);
+        projectScrollPane = new JScrollPane(projectFieldsJTable);
         projectScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         projectScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         projectScrollPane.setBounds(0, screenHeight / 4, screenWidth - 20, screenHeight / 2 + screenHeight / 4 - 50);
-        projectScrollPane.setColumnHeaderView(new JLabel("Project Information"));
+        //projectScrollPane.setColumnHeaderView(new JLabel("Project Information"));
         screens[0].add(projectScrollPane);
 
         //promptPanel used for prompting for input when creating project
@@ -108,7 +121,7 @@ public class View {
 
         //Button for adding projectLeader
         addProjectLeaderButton = new JButton();
-        addProjectLeaderButton.setText("Add a Project Leader");
+        addProjectLeaderButton.setText("Add/Change Project Leader");
         addProjectLeaderButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
         addProjectLeaderButton.setBounds(screenWidth / 2, 0, screenWidth / 4, screenHeight / 4);
         addProjectLeaderButton.setVisible(true);
@@ -168,10 +181,22 @@ public class View {
         changeBudgetedTimeButton.setForeground(new Color(0x000000));
         screens[2].add(changeBudgetedTimeButton);
 
+        //Button to register hours for activity
+        registerHoursButton = new JButton();
+        registerHoursButton.setText("Register Hours");
+        registerHoursButton.setSize(new Dimension(screenWidth / 4, screenHeight / 4));
+        registerHoursButton.setBounds(3*screenWidth/4, 0, screenWidth / 4, screenHeight / 4);
+        registerHoursButton.setVisible(true);
+        registerHoursButton.setBackground(new Color(0x6f6f6f));
+        registerHoursButton.setForeground(new Color(0x000000));
+        screens[2].add(registerHoursButton);
+
         //PromptPanels for the buttons
         addEmployeePromptPanel = new TwoFieldsActorPromptPanel("Employee Initials");
         changeBudgetedTimePromptPanel = new TwoFieldsActorPromptPanel("New Budgeted Time");
         activityDatesChangePromptPanel = new ActivityDatesChangePromptPanel();
+        registerHoursPromptPanel = new TwoFieldsActorPromptPanel("Hours to register");
+
 
 
         startFrame.add(screens[2]);
@@ -199,5 +224,7 @@ public class View {
         changeActivityDatesButton.addActionListener(e -> controller.changeActivityDates());
 
         changeBudgetedTimeButton.addActionListener(e -> controller.changeBudgetedTime());
+
+        registerHoursButton.addActionListener(e -> controller.registerHoursForActivity());
     }
 }

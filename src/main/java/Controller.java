@@ -246,4 +246,27 @@ public class Controller {
         }
         view.startFrame.requestFocusInWindow();
     }
+
+    public void registerHoursForActivity(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.registerHoursPromptPanel, "Enter Hours and Your Initials", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            int index1 = view.projectFieldsJList.getSelectedIndex();
+            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index2 = view.activityFieldsJList.getSelectedIndex();
+            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            Activity currentActivity = currentProject.getActivityByName(activityName);
+            String actorName = view.registerHoursPromptPanel.getActorName();
+            try {
+                int hours = Integer.valueOf(view.registerHoursPromptPanel.getFirstField());
+                Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+                actor.registerHours(currentActivity,hours);
+                view.registerHoursPromptPanel.clear();
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        view.startFrame.requestFocusInWindow();
+    }
 }
