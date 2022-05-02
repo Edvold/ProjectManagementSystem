@@ -6,13 +6,12 @@ import java.util.ArrayList;
 
 public class Project {
 
-    private final String PROJECT_NUMBER;
+    private String projectNumber;
     private LocalDateTime startDate;
     private LocalDateTime expectedEndDate;
     private String projectName;
     private Employee projectLeader;
     private ArrayList<Activity> activities = new ArrayList<>();
-    private ArrayList<Employee> employeeList = new ArrayList<>();
 
     public Project(LocalDateTime startDate, String projectName, String projectNumber) throws InvalidDateError {
         if (startDate == null) throw new InvalidDateError("There is missing information about the date");
@@ -23,13 +22,11 @@ public class Project {
         this.startDate = startDate;
         expectedEndDate = startDate.plusMonths(6);
         this.projectName=projectName;
-        this.PROJECT_NUMBER = String.valueOf(startDate.getYear()).substring(2) + projectNumber;
+        this.projectNumber = String.valueOf(startDate.getYear()).substring(2) + projectNumber;
     }
 
     public Project(String projectName, String projectNumber){
-        LocalDateTime date = LocalDateTime.now();
         this.projectName=projectName;
-        this.PROJECT_NUMBER = String.valueOf(date.getYear()).substring(2) + projectNumber;
     }
 
     public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime, Employee actor) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException, MissingRequiredPermissionError {
@@ -69,13 +66,15 @@ public class Project {
         return projectName;
     }
 
-    public String getPROJECT_NUMBER() {
-        return PROJECT_NUMBER;
+    public String getProjectNumber() {
+        return projectNumber;
     }
 
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
         if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("Invalid date");
+        if (startDate.getYear() != this.startDate.getYear()) updateProjectNumber();
         this.startDate = startDate;
+
     }
 
     public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError {
@@ -97,4 +96,7 @@ public class Project {
         return projectLeader;
     }
 
+    private void updateProjectNumber() {
+        projectNumber = ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
+    }
 }

@@ -21,7 +21,7 @@ public class Controller {
                         ProjectManager.getInstance().createProject(projectName);
 
                         //creating a string with project name and number
-                        String projectFields = projectName + "   " + ProjectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                        String projectFields = projectName + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
                         view.projectFieldsList.add(projectFields);
                         view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
 
@@ -44,7 +44,7 @@ public class Controller {
 
                         //creating a string with project name, date and number
                         String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
-                                projectDate.getYear() + "   " + ProjectManager.getInstance().getProjectByName(projectName).getPROJECT_NUMBER();
+                                projectDate.getYear() + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
                         view.projectFieldsList.add(projectFields);
                         view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
 

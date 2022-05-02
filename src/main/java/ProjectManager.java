@@ -36,7 +36,7 @@ public class ProjectManager {
 
     }
 
-    private String computeProjectNumber(int year) {
+    public String computeProjectNumber(int year) {
         if(projectNumberMap.containsKey(year)) {
             projectNumberMap.put(year,projectNumberMap.get(year)+1);
         } else {
@@ -47,10 +47,7 @@ public class ProjectManager {
     }
 
     private boolean hasName(String name){
-        if(getProjectByName(name) != null){
-            return true;
-        }
-        return false;
+        return getProjectByName(name) != null;
     }
 
     private String leftPadding(int i, int stringLength) {
