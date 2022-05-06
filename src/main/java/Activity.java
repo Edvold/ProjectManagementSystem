@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Activity {
 
-    private String name;
+    private final String NAME;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Project project;
+    private final Project PROJECT;
     private double budgetedTime;
     private ArrayList<Employee> employeeList = new ArrayList<>();
     private final String ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR = "Only the project leader can change the data of an activity";
@@ -19,10 +19,10 @@ public class Activity {
         String errorMessage = getCorrectInvalidDateError(startDate, endDate, project.getStartDate());
         if (errorMessage != null) throw new InvalidDateError(errorMessage);
         if (budgetedTime <= 0) throw new IllegalArgumentException(BUDGETED_TIME_NOT_POSITIVE_ERROR);
-        this.name = name;
+        this.NAME = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.project = project;
+        this.PROJECT = project;
         this.budgetedTime = budgetedTime;
     }
 
@@ -45,9 +45,9 @@ public class Activity {
 
     public void changeDates(LocalDateTime startDate, LocalDateTime endDate, Employee actor) throws InvalidDateError, MissingRequiredPermissionError {
         //Checking if the employee is the project leader
-        if (!actor.equals(project.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
+        if (!actor.equals(PROJECT.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         // Check if new date is okay
-        String errorMessage = getCorrectInvalidDateError(startDate, endDate, project.getStartDate());
+        String errorMessage = getCorrectInvalidDateError(startDate, endDate, PROJECT.getStartDate());
         if(errorMessage != null) throw new InvalidDateError(errorMessage);
         // No errors - can change dates
         this.startDate = startDate;
@@ -55,13 +55,13 @@ public class Activity {
     }
 
     public void setBudgetedTime(double budgetedTime, Employee actor) throws MissingRequiredPermissionError, IllegalArgumentException {
-        if (!actor.equals(project.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
+        if (!actor.equals(PROJECT.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         if (budgetedTime <= 0) throw new IllegalArgumentException(BUDGETED_TIME_NOT_POSITIVE_ERROR);
         this.budgetedTime = budgetedTime;
     }
 
     public String getName() {
-        return name;
+        return NAME;
     }
 
     public double getBudgetedTime() {
@@ -73,7 +73,7 @@ public class Activity {
     public LocalDateTime getEndDate() {return endDate;}
 
     public void addEmployee(Employee employee, Employee actor) throws IllegalArgumentException, MissingRequiredPermissionError {
-        if (!actor.equals(project.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
+        if (!actor.equals(PROJECT.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         if (isEmployeeWorkingOnActivity(employee)) throw new IllegalArgumentException("The employee is already a part of the activity");
         employeeList.add(employee);
         employee.addActivity(this);
@@ -88,6 +88,6 @@ public class Activity {
     }
 
     public Project getProject() {
-        return project;
+        return PROJECT;
     }
 }
