@@ -119,8 +119,8 @@ public class Controller {
             try {
                 String activityName = view.createActivityPromptPanel.getTheName();
                 double budgetedTime = view.createActivityPromptPanel.getExpectedTime();
-                int index = view.projectFieldsJList.getSelectedIndex();
-                String currentProjectName = view.projectFieldsList.get(index).split(" ")[0];
+                int index = view.projectFieldsJTable.getSelectedRow();
+                String currentProjectName = (String) view.projectFieldsJTable.getValueAt(index,0);
                 String employeeName = view.createActivityPromptPanel.getEmployeeName();
                 Employee employee = EmployeeManager.getInstance().getEmployeeByName(employeeName);
                 ProjectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName, startDate, endDate, budgetedTime, employee);
