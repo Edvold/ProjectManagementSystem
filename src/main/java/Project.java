@@ -66,7 +66,7 @@ public class Project {
 
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
         if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("Invalid date");
-        if (startDate.getYear() != this.startDate.getYear()) updateProjectNumber();
+        if (startDate.getYear() != this.startDate.getYear()) updateProjectNumber(startDate.getYear());
         this.startDate = startDate;
 
     }
@@ -90,7 +90,7 @@ public class Project {
         return projectLeader;
     }
 
-    private void updateProjectNumber() {
-        projectNumber = String.valueOf(startDate.getYear()).substring(2) + ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
+    private void updateProjectNumber(int year) {
+        projectNumber = String.valueOf(year).substring(2) + ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
     }
 }
