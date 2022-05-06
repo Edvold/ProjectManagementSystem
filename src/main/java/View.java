@@ -80,15 +80,12 @@ public class View {
 
         projectFieldsJTable = new JTable(tableModel);
         projectFieldsJTable.setDefaultEditor(Object.class,null);
-       // projectFieldsJTable.setVisible(true);
-        //projectFieldsJTable.setBounds(0, screenHeight / 4, screenWidth - 20, screenHeight / 2 + screenHeight / 4 - 50);
 
         //ScrollPane displaying project fields
         projectScrollPane = new JScrollPane(projectFieldsJTable);
         projectScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         projectScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         projectScrollPane.setBounds(0, screenHeight / 4, screenWidth - 20, screenHeight / 2 + screenHeight / 4 - 50);
-        //projectScrollPane.setColumnHeaderView(new JLabel("Project Information"));
         screens[0].add(projectScrollPane);
 
         //promptPanel used for prompting for input when creating project

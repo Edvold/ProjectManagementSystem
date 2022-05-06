@@ -19,11 +19,15 @@ public class Controller {
                 if(view.projectCreationPromptPanel.noDate()){
                     try {
                         ProjectManager.getInstance().createProject(projectName);
-
+                        Project project = ProjectManager.getInstance().getProjectByName(projectName);
                         //creating a string with project name and number
                         String projectFields = projectName + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
                         view.projectFieldsList.add(projectFields);
                         view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
+
+                        Object[] fields = new Object[]{projectName, "", project.getProjectNumber(),""};
+                         view.tableModel.addRow(fields);
+                         view.projectFieldsJTable.setModel(view.tableModel);
 
                         // only clearing optionpane if project is created
                         view.projectCreationPromptPanel.clear();
