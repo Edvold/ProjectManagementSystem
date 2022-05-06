@@ -89,11 +89,14 @@ public class Controller {
                 JOptionPane.showMessageDialog(null, error.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
             try {
-                int index = view.projectFieldsJList.getSelectedIndex();
-                String name = view.projectFieldsList.get(index).split(" ")[0];
-                ProjectManager.getInstance().getProjectByName(name).setStartDate(projectDate);
+                int index = view.projectFieldsJTable.getSelectedRow();
+                String projectName = (String) view.projectFieldsJTable.getValueAt(index,0);
+                Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+                currentProject.setStartDate(projectDate);
+                view.projectFieldsJTable.setValueAt(currentProject.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),view.projectFieldsJTable.getSelectedRow(),1);
+                view.projectFieldsJTable.setValueAt(currentProject.getProjectNumber(),view.projectFieldsJTable.getSelectedRow(),2);
 
-                // only clearing optionpane if project is created
+                // only clearing optionpane if date is changed
                 view.projectDateChangePromptPanel.clear();
             } catch (InvalidDateError ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -116,8 +119,8 @@ public class Controller {
             try {
                 String activityName = view.createActivityPromptPanel.getTheName();
                 double budgetedTime = view.createActivityPromptPanel.getExpectedTime();
-                int index = view.projectFieldsJList.getSelectedIndex();
-                String currentProjectName = view.projectFieldsList.get(index).split(" ")[0];
+                int index = view.projectFieldsJTable.getSelectedRow();
+                String currentProjectName = (String) view.projectFieldsJTable.getValueAt(index,0);
                 String employeeName = view.createActivityPromptPanel.getEmployeeName();
                 Employee employee = EmployeeManager.getInstance().getEmployeeByName(employeeName);
                 ProjectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName, startDate, endDate, budgetedTime, employee);
