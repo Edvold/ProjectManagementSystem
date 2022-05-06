@@ -1,5 +1,3 @@
-import io.cucumber.java.sl.In;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -44,10 +42,6 @@ public class Project {
             if (a.getName().equals(name)) return a;
         }
         return null;
-    }
-
-    public boolean hasActivity(Activity activity) {
-        return hasActivityWithName(activity.getName());
     }
 
     public boolean hasActivityWithName(String name) {
@@ -97,6 +91,6 @@ public class Project {
     }
 
     private void updateProjectNumber() {
-        projectNumber = ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
+        projectNumber = String.valueOf(startDate.getYear()).substring(2) + ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
     }
 }

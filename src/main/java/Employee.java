@@ -5,14 +5,14 @@ import java.util.Set;
 
 public class Employee {
 
-    private String name;
+    private final String NAME;
     private HashMap<Activity, Double> activityHours = new HashMap<>();
 
     private final String NOT_WORKING_ON_ACTIVITY_ERROR = "You don't work on this activity";
     private final String ILLEGAL_HOURS_AMOUNT_ERROR = "You need to input a positive amount of hours";
 
     public Employee(String name) {
-        this.name = name;
+        this.NAME = name;
     }
 
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
@@ -67,7 +67,7 @@ public class Employee {
     }
 
     public String getName() {
-        return name;
+        return NAME;
     }
 
 }
