@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,7 +205,7 @@ public class View {
 
         createProjectButton.addActionListener(e -> controller.CreateAProject());
 
-        projectFieldsJList.addKeyListener((KeyPressedListener) e -> controller.changeToProjectScreen(e));
+        projectFieldsJTable.addMouseListener((MouseClickedListener) e -> controller.changeToProjectScreen(e));
 
         changeStartDateButton.addActionListener(e -> controller.changeProjectStartDate());
 
