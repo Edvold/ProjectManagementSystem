@@ -1,6 +1,11 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 
 public class Controller {
 
@@ -45,12 +50,17 @@ public class Controller {
 
                     try {
                         ProjectManager.getInstance().createProject(projectDate, projectName);
+                        Project project = ProjectManager.getInstance().getProjectByName(projectName);
 
                         //creating a string with project name, date and number
                         String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
                                 projectDate.getYear() + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
                         view.projectFieldsList.add(projectFields);
                         view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
+
+                        Object[] fields = new Object[]{projectName, project.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), project.getProjectNumber(),""};
+                        view.tableModel.addRow(fields);
+                        view.projectFieldsJTable.setModel(view.tableModel);
 
                         // only clearing optionpane if project is created
                         view.projectCreationPromptPanel.clear();
@@ -62,8 +72,8 @@ public class Controller {
         view.startFrame.requestFocusInWindow();
     }
 
-    public void changeToProjectScreen(KeyEvent e) {
-        if ((e.getKeyCode() == KeyEvent.VK_ENTER) & (view.projectFieldsJList.getSelectedIndex() >= 0)) {
+    public void changeToProjectScreen(MouseEvent e) {
+        if ((e.getClickCount() == 2) & (view.projectFieldsJTable.getSelectedRow() >= 0)) {
             changeScreen();
         }
         view.startFrame.requestFocusInWindow();
@@ -134,13 +144,14 @@ public class Controller {
         int inputs = JOptionPane.showConfirmDialog(null, view.addAProjectLeaderPromptPanel, "Enter Initials of new Project Leader", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
             String employeeName = view.addAProjectLeaderPromptPanel.getInput();
-            int index = view.projectFieldsJList.getSelectedIndex();
-            String projectName = view.projectFieldsList.get(index).split(" ")[0];
-            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index = view.projectFieldsJTable.getSelectedRow();
             try {
+                String projectName = (String) view.projectFieldsJTable.getValueAt(index,0);
+                Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
                 Employee projectLeader = EmployeeManager.getInstance().getEmployeeByName(employeeName);
                 currentProject.setProjectLeader(projectLeader);
                 view.addAProjectLeaderPromptPanel.clear();
+                view.projectFieldsJTable.setValueAt(projectLeader.getName(),view.projectFieldsJTable.getSelectedRow(),3);
             }
             catch (Exception e){
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);

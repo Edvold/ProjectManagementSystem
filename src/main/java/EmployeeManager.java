@@ -39,10 +39,6 @@ public class EmployeeManager {
         return instance;
     }
 
-    public boolean hasEmployee(Employee employee){
-        return employees.contains(employee);
-    }
-
     public Employee getEmployeeByName(String name){
         for(Employee employee : employees){
             if(employee.getName().equals(name)){
@@ -59,10 +55,6 @@ public class EmployeeManager {
         }
 
         return availableEmployees;
-    }
-
-    public ArrayList<Employee> getEmployees() {
-        return employees;
     }
 
 }
