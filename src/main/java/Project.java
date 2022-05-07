@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -42,6 +43,24 @@ public class Project {
             if (a.getName().equals(name)) return a;
         }
         return null;
+    }
+
+    public String getReport(Employee actor) throws MissingRequiredPermissionError {
+        if(actor.equals(this.projectLeader)){
+            String report = "Start Date: " + startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + expectedEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
+                    + "Activity Name: hours worked/budgeted time";
+            for (Activity ac : activities){
+                double hoursWorked = 0;
+                for(Employee emp : ac.getEmployeeList()){
+                    hoursWorked += emp.getHours(ac);
+                }
+                report += "\n" + ac.getName() + ": " + hoursWorked + "/" + ac.getBudgetedTime();
+            }
+            return report;
+        }
+        else{
+            throw new MissingRequiredPermissionError("You are not the Leader of this Project");
+        }
     }
 
     public boolean hasActivityWithName(String name) {

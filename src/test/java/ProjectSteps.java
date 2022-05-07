@@ -3,6 +3,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +16,7 @@ public class ProjectSteps {
     private ProjectManager projectManager;
     private String dummyName = "name";
     private Employee projectLeader;
+    private String report;
 
     public ProjectSteps(ErrorMessageHolder errorMessageHolder){
         this.errorMessageHolder = errorMessageHolder;
@@ -107,14 +109,11 @@ public class ProjectSteps {
             projectManager.getInstance().createProject(projectStartDate,dummyName);
             this.project = projectManager.getInstance().getProjectByName(dummyName);
         }
-        catch (InvalidDateError error){
+        catch (InvalidDateError|DuplicateNameError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
-        } catch (DuplicateNameError e) {
-            errorMessageHolder.setErrorMessage(e.getMessage());
         }
-
-
     }
+
     @When("An employee creates a project with the same name")
     public void an_employee_creates_a_project_with_the_same_name() throws DuplicateNameError, InvalidDateError {
         projectStartDate = LocalDateTime.now();
@@ -245,6 +244,77 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
         assertTrue(!projectLeader.isAvailable(projectStartDate,project.getExpectedEndDate()));
+    }
+
+    @Given("The project leader requests a report")
+    public void the_project_leader_requests_a_report() {
+        //create a project
+        projectManager.getInstance().emptyList();
+        projectStartDate = LocalDateTime.now();
+        projectStartDate = projectStartDate.plusDays(1);
+        try{
+            projectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = projectManager.getInstance().getProjectByName(dummyName);
+        }
+        catch (InvalidDateError|DuplicateNameError error){
+            errorMessageHolder.setErrorMessage(error.getMessage());
+        }
+
+        //adding project leader
+        this.projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
+        try {
+            project.setProjectLeader(projectLeader);
+        }
+        catch (EmployeeIsUnavailableError e){
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+
+        //creating a couple of activities
+        LocalDateTime activityStartDate = project.getStartDate();
+        LocalDateTime activityEndDate = activityStartDate.plusDays(20);
+        int budgetedTime = 20;
+        try {
+            project.createActivity("Activity1", activityStartDate, activityEndDate, budgetedTime, projectLeader);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        budgetedTime = 40;
+        try {
+            project.createActivity("Activity2", activityStartDate, activityEndDate, budgetedTime, projectLeader);
+        } catch (InvalidDateError | DuplicateNameError | DateNotInitializedError | IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+
+        //adding employees and registering hours
+        try {
+            Employee emp1 = EmployeeManager.getInstance().getEmployeeByName("bbje");
+            Employee emp2 = EmployeeManager.getInstance().getEmployeeByName("mved");
+            project.getActivityByName("Activity1").addEmployee(emp1, projectLeader);
+            project.getActivityByName("Activity2").addEmployee(emp2,projectLeader);
+            emp1.registerHours(project.getActivityByName("Activity1"),12);
+            emp2.registerHours(project.getActivityByName("Activity2"),36);
+        } catch (IllegalArgumentException | MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        try {
+            this.report = project.getReport(projectLeader);
+        } catch (MissingRequiredPermissionError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+
+    }
+
+    @Then("The project leader receives a report")
+    public void the_project_leader_receives_a_report() {
+        assertTrue(!report.equals(null));
+    }
+
+    @Then("The information is correct")
+    public void the_information_is_correct() {
+        String information = "Start Date: " + project.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + project.getExpectedEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
+                + "Activity Name: hours worked/budgeted time" + "\n"
+                + "Activity1: 12.0/20.0" + "\n" + "Activity2: 36.0/40.0";
+        assertTrue(report.equals(information));
     }
 
 

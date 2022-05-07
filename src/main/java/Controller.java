@@ -283,4 +283,24 @@ public class Controller {
         view.availableEmployeesJList.setListData(employeeNames);
         JOptionPane.showMessageDialog(null, view.availableEmployeesScrollPane, "Available Employees for Activity : " + currentActivity.getName(), JOptionPane.OK_OPTION);
     }
+
+    public void showReport(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.showReportPromptPanel, "Enter Your Initials", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            String report = "";
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            String actorName = view.showReportPromptPanel.getInput();
+            Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+            try{
+                report = currentProject.getReport(actor);
+            } catch (MissingRequiredPermissionError e) {
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+            String[] reportData = report.split("\n");
+            view.reportFieldsJList.setListData(reportData);
+            JOptionPane.showMessageDialog(null, view.reportScrollPane, "Report for Project: " + projectName, JOptionPane.OK_OPTION);
+        }
+    }
 }

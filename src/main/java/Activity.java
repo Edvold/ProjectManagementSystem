@@ -83,6 +83,10 @@ public class Activity {
         return EmployeeManager.getInstance().getAvailableEmployees(startDate, endDate);
     }
 
+    public ArrayList<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
     public boolean isEmployeeWorkingOnActivity(Employee employee) {
         return employeeList.contains(employee);
     }
