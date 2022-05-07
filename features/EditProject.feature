@@ -6,6 +6,7 @@ Feature: Change project start date
     Given The date is valid for project
     When The employee changes the start date of the project
     Then The project start date is the new date
+    And The project has the correct project number
 
   Scenario: Employee changes the start date with invalid date
     Given The date is invalid
