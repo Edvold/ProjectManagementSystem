@@ -32,7 +32,7 @@ public class ProjectManager {
             throw new DuplicateNameError("Name is already in use");
         }
 
-        projectList.add(new Project(projectName, computeProjectNumber(LocalDateTime.now().getYear())));
+        projectList.add(new Project(projectName));
 
     }
 

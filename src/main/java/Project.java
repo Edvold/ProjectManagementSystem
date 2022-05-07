@@ -23,7 +23,7 @@ public class Project {
         this.projectNumber = String.valueOf(startDate.getYear()).substring(2) + projectNumber;
     }
 
-    public Project(String projectName, String projectNumber){
+    public Project(String projectName){
         this.projectName=projectName;
     }
 
@@ -83,7 +83,6 @@ public class Project {
         else {
             throw new EmployeeIsUnavailableError("The new project leader is unavailable for this project");
         }
-        // Maybe only the project leader can change the role?
     }
 
     public Employee getProjectLeader() {
