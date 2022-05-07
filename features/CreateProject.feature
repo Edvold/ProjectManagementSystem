@@ -5,10 +5,7 @@ Feature: Create Project
 	Scenario: Employee creates a project with a date
 		Given The employee creates a project with today as the date
 		Then A project is created with the given date
-
-	Scenario: Employee creates a project with a date
-		Given The employee creates a project with a day after today as the date
-		Then A project is created with the given date
+		And The project has the correct project number
 
 	Scenario: Employee creates a project without a date
 		Given An employee creates a project
@@ -23,5 +20,3 @@ Feature: Create Project
 		Given A project already exists with the same name
 		When An employee creates a project with the same name
 		Then An error is raised with message "Name is already in use"
-
-		# Check project number
