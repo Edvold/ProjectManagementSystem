@@ -91,6 +91,6 @@ public class Project {
     }
 
     private void updateProjectNumber(int year) {
-        projectNumber = String.valueOf(year).substring(2) + ProjectManager.getInstance().computeProjectNumber(startDate.getYear());
+        projectNumber = String.valueOf(year).substring(2) + ProjectManager.getInstance().computeProjectNumber(year);
     }
 }
