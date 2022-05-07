@@ -26,6 +26,7 @@ public class View {
     protected ProjectDateChangePromptPanel projectDateChangePromptPanel;
     protected CreateActivityPromptPanel createActivityPromptPanel;
     protected PromptPanel addAProjectLeaderPromptPanel;
+    protected PromptPanel showReportPromptPanel;
     protected JButton addEmployeeButton;
     protected JButton changeActivityDatesButton;
     protected JButton changeBudgetedTimeButton;
@@ -36,6 +37,8 @@ public class View {
     protected TwoFieldsActorPromptPanel changeBudgetedTimePromptPanel;
     protected ActivityDatesChangePromptPanel activityDatesChangePromptPanel;
     protected TwoFieldsActorPromptPanel registerHoursPromptPanel;
+    protected JList<String> reportFieldsJList;
+    protected JScrollPane reportScrollPane;
     protected JList<String> availableEmployeesJList;
     protected JScrollPane availableEmployeesScrollPane;
 
@@ -165,6 +168,14 @@ public class View {
         projectDateChangePromptPanel = new ProjectDateChangePromptPanel();
         createActivityPromptPanel = new CreateActivityPromptPanel();
         addAProjectLeaderPromptPanel = new PromptPanel("New Project Leader's Initials");
+        showReportPromptPanel = new PromptPanel("Your Initials");
+
+        //TextArea to show report
+        reportFieldsJList = new JList();
+        reportScrollPane = new JScrollPane(reportFieldsJList);
+        reportScrollPane.setColumnHeaderView(new JLabel("Report Information"));
+        reportScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        reportScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         startFrame.add(screens[1]);
 
@@ -272,5 +283,7 @@ public class View {
         goToPreviousScreenButton1.addActionListener(e -> controller.goToPreviousScreen());
 
         goToPreviousScreenButton2.addActionListener(e -> controller.goToPreviousScreen());
+
+        showReportButton.addActionListener(e -> controller.showReport());
     }
 }
