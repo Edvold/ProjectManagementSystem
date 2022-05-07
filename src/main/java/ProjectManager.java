@@ -72,6 +72,7 @@ public class ProjectManager {
 
     public void emptyList(){
         projectList.clear();
+        projectNumberMap.clear();
     }
 
     public void changeProjectStartDate(String projectName, LocalDateTime newDate) throws InvalidDateError {
