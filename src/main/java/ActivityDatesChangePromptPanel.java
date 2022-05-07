@@ -11,7 +11,7 @@ public class ActivityDatesChangePromptPanel extends PromptPanel{
     private JTextField endDayField = new JTextField(5);
 
     public ActivityDatesChangePromptPanel() {
-        super("Actor Initials");
+        super("Your Initials");
         JPanel row1 = new JPanel();
         JPanel row2 = new JPanel();
 
