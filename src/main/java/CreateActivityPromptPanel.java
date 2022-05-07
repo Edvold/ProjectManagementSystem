@@ -39,7 +39,7 @@ public class CreateActivityPromptPanel extends PromptPanel {
         row3.add(new JLabel("Budgeted Time"));
         row3.add(budgetedTimeField);
         row3.add(Box.createHorizontalStrut(20));
-        row3.add(new JLabel("Employee Initials"));
+        row3.add(new JLabel("Your Initials"));
         row3.add(employeeField);
 
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));

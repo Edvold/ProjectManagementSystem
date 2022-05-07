@@ -1,11 +1,8 @@
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -25,10 +22,6 @@ public class Controller {
                     try {
                         ProjectManager.getInstance().createProject(projectName);
                         Project project = ProjectManager.getInstance().getProjectByName(projectName);
-                        //creating a string with project name and number
-                        String projectFields = projectName + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
-                        view.projectFieldsList.add(projectFields);
-                        view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
 
                         Object[] fields = new Object[]{projectName, "", project.getProjectNumber(),""};
                          view.tableModel.addRow(fields);
@@ -52,12 +45,6 @@ public class Controller {
                         ProjectManager.getInstance().createProject(projectDate, projectName);
                         Project project = ProjectManager.getInstance().getProjectByName(projectName);
 
-                        //creating a string with project name, date and number
-                        String projectFields = projectName + "   " + projectDate.getDayOfMonth() + "." + projectDate.getMonth() + "." +
-                                projectDate.getYear() + "   " + ProjectManager.getInstance().getProjectByName(projectName).getProjectNumber();
-                        view.projectFieldsList.add(projectFields);
-                        view.projectFieldsJList.setListData(view.projectFieldsList.toArray());
-
                         Object[] fields = new Object[]{projectName, project.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), project.getProjectNumber(),""};
                         view.tableModel.addRow(fields);
                         view.projectFieldsJTable.setModel(view.tableModel);
@@ -69,14 +56,12 @@ public class Controller {
                     }
                 }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void changeToProjectScreen(MouseEvent e) {
         if ((e.getClickCount() == 2) & (view.projectFieldsJTable.getSelectedRow() >= 0)) {
             changeScreen();
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void changeProjectStartDate(){
@@ -102,7 +87,6 @@ public class Controller {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void createAnActivity(){
@@ -125,12 +109,10 @@ public class Controller {
                 Employee employee = EmployeeManager.getInstance().getEmployeeByName(employeeName);
                 ProjectManager.getInstance().getProjectByName(currentProjectName).createActivity(activityName, startDate, endDate, budgetedTime, employee);
 
-                //creating a string with activity name and dates
-                String activityFields = activityName + "   " + startDate.getDayOfMonth() + "." + startDate.getMonth() + "." +
-                        startDate.getYear() + "   " + endDate.getDayOfMonth() + "." + endDate.getMonth() + "." +
-                        endDate.getYear();
-                view.activityFieldsList.add(activityFields);
-                view.activityFieldsJList.setListData(view.activityFieldsList.toArray());
+                Activity activity = ProjectManager.getInstance().getProjectByName(currentProjectName).getActivityByName(activityName);
+                Object[] fields = new Object[]{activityName, activity.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), activity.getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),activity.getBudgetedTime()};
+                view.activityTableModel.addRow(fields);
+                view.activityFieldsJTable.setModel(view.activityTableModel);
 
                 // only clearing optionpane if activity is created
                 view.createActivityPromptPanel.clear();
@@ -140,7 +122,6 @@ public class Controller {
             }
 
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void addAProjectLeader(){
@@ -160,18 +141,15 @@ public class Controller {
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
-    public void changeToActivityScreen(KeyEvent e){
-        if ((e.getKeyCode() == KeyEvent.VK_ENTER) & (view.activityFieldsJList.getSelectedIndex() >= 0)) {
+    public void changeToActivityScreen(MouseEvent e){
+        if ((e.getClickCount() == 2) & (view.activityFieldsJTable.getSelectedRow() >= 0)) {
             changeScreen();
         }
-        view.startFrame.requestFocusInWindow();
     }
 
-    public void goToPreviousScreen(KeyEvent e){
-        if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)) {
+    public void goToPreviousScreen(){
             view.screens[currentScreen].setVisible(false);
             if (currentScreen > 0) {
                 currentScreen--;
@@ -180,8 +158,11 @@ public class Controller {
             view.projectCreationPromptPanel.clear();
             view.createActivityPromptPanel.clear();
             view.projectDateChangePromptPanel.clear();
-        }
-        view.startFrame.requestFocusInWindow();
+            view.registerHoursPromptPanel.clear();
+            view.changeBudgetedTimePromptPanel.clear();
+            view.activityDatesChangePromptPanel.clear();
+            view.addEmployeePromptPanel.clear();
+            view.addAProjectLeaderPromptPanel.clear();
     }
 
     private void changeScreen(){
@@ -198,11 +179,11 @@ public class Controller {
     public void addAnEmployee(){
         int inputs = JOptionPane.showConfirmDialog(null, view.addEmployeePromptPanel, "Enter Initials of Employee to be added and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
-            int index1 = view.projectFieldsJList.getSelectedIndex();
-            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
             Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
-            int index2 = view.activityFieldsJList.getSelectedIndex();
-            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            int index2 = view.activityFieldsJTable.getSelectedRow();
+            String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String employeeName = view.addEmployeePromptPanel.getFirstField();
             String actorName = view.addEmployeePromptPanel.getActorName();
@@ -216,17 +197,16 @@ public class Controller {
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void changeActivityDates(){
         int inputs = JOptionPane.showConfirmDialog(null, view.activityDatesChangePromptPanel, "Enter Your Initials, Start Date and End Date", JOptionPane.OK_CANCEL_OPTION);
         if (inputs == JOptionPane.OK_OPTION) {
-            int index1 = view.projectFieldsJList.getSelectedIndex();
-            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
             Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
-            int index2 = view.activityFieldsJList.getSelectedIndex();
-            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            int index2 = view.activityFieldsJTable.getSelectedRow();
+            String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.activityDatesChangePromptPanel.getActorName();
             try {
@@ -235,21 +215,22 @@ public class Controller {
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 currentActivity.changeDates(startDate,endDate,actor);
                 view.activityDatesChangePromptPanel.clear();
+                view.activityFieldsJTable.setValueAt(currentActivity.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),index2,1);
+                view.activityFieldsJTable.setValueAt(currentActivity.getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),index2,2);
             } catch (Exception error) {
                 JOptionPane.showMessageDialog(null, error.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void changeBudgetedTime(){
         int inputs = JOptionPane.showConfirmDialog(null, view.changeBudgetedTimePromptPanel, "Enter Budgeted Time and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
-            int index1 = view.projectFieldsJList.getSelectedIndex();
-            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
             Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
-            int index2 = view.activityFieldsJList.getSelectedIndex();
-            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            int index2 = view.activityFieldsJTable.getSelectedRow();
+            String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.changeBudgetedTimePromptPanel.getActorName();
             try {
@@ -257,22 +238,22 @@ public class Controller {
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 currentActivity.setBudgetedTime(newBudgetedTime,actor);
                 view.changeBudgetedTimePromptPanel.clear();
+                view.activityFieldsJTable.setValueAt(currentActivity.getBudgetedTime(),index2,3);
             }
             catch (Exception e){
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
     }
 
     public void registerHoursForActivity(){
         int inputs = JOptionPane.showConfirmDialog(null, view.registerHoursPromptPanel, "Enter Hours and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
-            int index1 = view.projectFieldsJList.getSelectedIndex();
-            String projectName = view.projectFieldsList.get(index1).split(" ")[0];
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
             Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
-            int index2 = view.activityFieldsJList.getSelectedIndex();
-            String activityName = view.activityFieldsList.get(index2).split(" ")[0];
+            int index2 = view.activityFieldsJTable.getSelectedRow();
+            String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.registerHoursPromptPanel.getActorName();
             try {
@@ -285,6 +266,21 @@ public class Controller {
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
             }
         }
-        view.startFrame.requestFocusInWindow();
+    }
+
+    public void getAvailableEmployees(){
+        int index1 = view.projectFieldsJTable.getSelectedRow();
+        String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
+        Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+        int index2 = view.activityFieldsJTable.getSelectedRow();
+        String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
+        Activity currentActivity = currentProject.getActivityByName(activityName);
+        ArrayList<Employee> employees = currentActivity.getAvailableEmployees();
+        String[] employeeNames = new String[employees.size()];
+        for (int i = 0; i < employees.size(); i++){
+            employeeNames[i] = employees.get(i).getName();
+        }
+        view.availableEmployeesJList.setListData(employeeNames);
+        JOptionPane.showMessageDialog(null, view.availableEmployeesScrollPane, "Available Employees for Activity : " + currentActivity.getName(), JOptionPane.OK_OPTION);
     }
 }
