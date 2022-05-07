@@ -16,7 +16,7 @@ public class Controller {
     public void CreateAProject(){
         int inputs = JOptionPane.showConfirmDialog(null,view.projectCreationPromptPanel,"Enter name and date",JOptionPane.OK_CANCEL_OPTION);
             if(inputs == JOptionPane.OK_OPTION){
-                LocalDateTime projectDate = null;
+                LocalDateTime projectDate;
                 String projectName = view.projectCreationPromptPanel.getTheName();
                 if(view.projectCreationPromptPanel.noDate()){
                     try {
@@ -39,6 +39,7 @@ public class Controller {
                     }
                     catch (Exception error){
                         JOptionPane.showMessageDialog(null,error.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
 
                     try {
@@ -67,11 +68,12 @@ public class Controller {
     public void changeProjectStartDate(){
         int inputs = JOptionPane.showConfirmDialog(null, view.projectDateChangePromptPanel, "Enter new date", JOptionPane.OK_CANCEL_OPTION);
         if (inputs == JOptionPane.OK_OPTION) {
-            LocalDateTime projectDate = null;
+            LocalDateTime projectDate;
             try {
                 projectDate = LocalDateTime.of(view.projectDateChangePromptPanel.getYear(), view.projectDateChangePromptPanel.getMonth(), view.projectDateChangePromptPanel.getDay(), 0, 0);
             } catch (Exception error) {
                 JOptionPane.showMessageDialog(null, error.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             try {
                 int index = view.projectFieldsJTable.getSelectedRow();
@@ -234,7 +236,7 @@ public class Controller {
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.changeBudgetedTimePromptPanel.getActorName();
             try {
-                int newBudgetedTime = Integer.valueOf(view.changeBudgetedTimePromptPanel.getFirstField());
+                int newBudgetedTime = Integer.parseInt(view.changeBudgetedTimePromptPanel.getFirstField());
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 currentActivity.setBudgetedTime(newBudgetedTime,actor);
                 view.changeBudgetedTimePromptPanel.clear();
@@ -257,7 +259,7 @@ public class Controller {
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.registerHoursPromptPanel.getActorName();
             try {
-                int hours = Integer.valueOf(view.registerHoursPromptPanel.getFirstField());
+                int hours = Integer.parseInt(view.registerHoursPromptPanel.getFirstField());
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 actor.registerHours(currentActivity,hours);
                 view.registerHoursPromptPanel.clear();
@@ -287,7 +289,7 @@ public class Controller {
     public void showReport(){
         int inputs = JOptionPane.showConfirmDialog(null, view.showReportPromptPanel, "Enter Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
-            String report = "";
+            String report;
             int index1 = view.projectFieldsJTable.getSelectedRow();
             String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
             Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
@@ -295,12 +297,13 @@ public class Controller {
             Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
             try{
                 report = currentProject.getReport(actor);
-            } catch (MissingRequiredPermissionError e) {
+                String[] reportData = report.split("\n");
+                view.reportFieldsJList.setListData(reportData);
+                JOptionPane.showMessageDialog(null, view.reportScrollPane, "Report for Project: " + projectName, JOptionPane.OK_OPTION);
+            } catch (MissingRequiredPermissionError | IllegalArgumentException e) {
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
             }
-            String[] reportData = report.split("\n");
-            view.reportFieldsJList.setListData(reportData);
-            JOptionPane.showMessageDialog(null, view.reportScrollPane, "Report for Project: " + projectName, JOptionPane.OK_OPTION);
+
         }
     }
 }
