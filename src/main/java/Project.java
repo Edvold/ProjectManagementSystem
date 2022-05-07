@@ -47,17 +47,23 @@ public class Project {
     }
 
     public String getReport(Employee actor) throws MissingRequiredPermissionError {
+        if (actor == null) throw new IllegalArgumentException("This employee doesn't exist");
         if(actor.equals(this.projectLeader)){
-            String report = "Start Date: " + startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + expectedEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
-                    + "Activity Name: hours worked/budgeted time";
+            StringBuilder report = new StringBuilder("Start Date: " + startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + expectedEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
+                    + "Activity: Hours worked / Budgeted time:");
+            double totalWorked = 0;
+            double totalBudgeted = 0;
             for (Activity ac : activities){
                 double hoursWorked = 0;
                 for(Employee emp : ac.getEmployeeList()){
                     hoursWorked += emp.getHours(ac);
                 }
-                report += "\n" + ac.getName() + ": " + hoursWorked + "/" + ac.getBudgetedTime();
+                totalWorked += hoursWorked;
+                totalBudgeted += ac.getBudgetedTime();
+                report.append("\n").append(ac.getName()).append(": ").append(hoursWorked).append("/").append(ac.getBudgetedTime());
             }
-            return report;
+            report.append("\nTotal:\n").append(totalWorked).append("/").append(totalBudgeted);
+            return report.toString();
         }
         else{
             throw new MissingRequiredPermissionError("You are not the Leader of this Project");
