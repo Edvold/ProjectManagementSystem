@@ -40,7 +40,7 @@ public class ProjectManager {
         if(projectNumberMap.containsKey(year)) {
             projectNumberMap.put(year,projectNumberMap.get(year)+1);
         } else {
-            projectNumberMap.put(year,1);
+            projectNumberMap.put(year, 1);
         }
 
         return leftPadding(projectNumberMap.get(year), 4);
@@ -51,13 +51,14 @@ public class ProjectManager {
     }
 
     private String leftPadding(int i, int stringLength) {
-        String iString = String.valueOf(i);
-        int amountOfZeroes = stringLength - iString.length();
+        // Inserts zeros into the project number such that all project numbers are of equal length
+        StringBuilder paddedString = new StringBuilder(String.valueOf(i));
+        int amountOfZeroes = stringLength - paddedString.length();
         for (int j = 0; j < amountOfZeroes; j++)
         {
-            iString = "0" + iString;
+            paddedString.insert(0, "0");
         }
-        return  iString;
+        return paddedString.toString();
     }
 
     public Project getProjectByName(String name){
