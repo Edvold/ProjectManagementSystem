@@ -19,6 +19,7 @@ public class Employee {
         List<Project> projects = ProjectManager.getInstance().getProjects();
 
         for (Project project : projects) {
+            // Check if the employee is the project leader on a project with overlapping dates
             if (project.getProjectLeader() == null) continue;
             if (!project.getProjectLeader().equals(this)) continue;
             if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate)) return false;
@@ -27,10 +28,8 @@ public class Employee {
         Set<Activity> activities = activityHours.keySet();
 
         for (Activity activity : activities) {
-
             if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
         }
-
         return true;
     }
 
