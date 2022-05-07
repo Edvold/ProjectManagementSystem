@@ -87,5 +87,3 @@ Feature: Edit Activity
     And The employee is not the project leader
     When The employee adds the employee to the activity
     Then An error is raised with message "Only the project leader can change the data of an activity"
-
-  # Missing scenario for employee not available
