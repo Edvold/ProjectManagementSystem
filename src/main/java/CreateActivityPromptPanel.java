@@ -4,10 +4,10 @@ public class CreateActivityPromptPanel extends PromptPanel {
 
     private String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     private JTextField startYearField = new JTextField(5);
-    private JComboBox startMonthField = new JComboBox(months);
+    private JComboBox<String> startMonthField = new JComboBox<>(months);
     private JTextField startDayField = new JTextField(5);
     private JTextField endYearField = new JTextField(5);
-    private JComboBox endMonthField = new JComboBox(months);
+    private JComboBox<String> endMonthField = new JComboBox<>(months);
     private JTextField endDayField = new JTextField(5);
     private JTextField budgetedTimeField = new JTextField(5);
     private JTextField employeeField = new JTextField(5);
@@ -53,7 +53,7 @@ public class CreateActivityPromptPanel extends PromptPanel {
     }
 
     public int getStartYear(){
-        return Integer.valueOf(startYearField.getText());
+        return Integer.parseInt(startYearField.getText());
     }
 
     public int getStartMonth(){
@@ -61,11 +61,11 @@ public class CreateActivityPromptPanel extends PromptPanel {
     }
 
     public int getStartDay(){
-        return Integer.valueOf(startDayField.getText());
+        return Integer.parseInt(startDayField.getText());
     }
 
     public int getEndYear(){
-        return Integer.valueOf(endYearField.getText());
+        return Integer.parseInt(endYearField.getText());
     }
 
     public int getEndMonth(){
@@ -73,11 +73,11 @@ public class CreateActivityPromptPanel extends PromptPanel {
     }
 
     public int getEndDay(){
-        return Integer.valueOf(endDayField.getText());
+        return Integer.parseInt(endDayField.getText());
     }
 
     public double getExpectedTime(){
-        return Double.valueOf(budgetedTimeField.getText());
+        return Double.parseDouble(budgetedTimeField.getText());
     }
 
     public String getEmployeeName(){

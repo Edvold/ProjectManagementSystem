@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class View {
 
@@ -45,10 +43,10 @@ public class View {
 
         //Creating panel array with panels for each screen in the program
         screens = new JPanel[]{new JPanel(null), new JPanel(null), new JPanel(null)};
-        for (int i = 0; i < screens.length; i++) {
-            screens[i].setBounds(0, 0, screenWidth, screenHeight);
-            screens[i].setVisible(false);
-            screens[i].setBackground(new Color(0x1F1B24));
+        for (JPanel screen : screens) {
+            screen.setBounds(0, 0, screenWidth, screenHeight);
+            screen.setVisible(false);
+            screen.setBackground(new Color(0x1F1B24));
         }
         screens[controller.currentScreen].setVisible(true);
 
@@ -79,7 +77,7 @@ public class View {
 
         projectFieldsJTable = new JTable(tableModel);
         projectFieldsJTable.setDefaultEditor(Object.class,null);
-        projectFieldsJTable.setFont(new Font("Courier New", 0, 30));
+        projectFieldsJTable.setFont(new Font("Courier New", Font.PLAIN, 30));
         projectFieldsJTable.setRowHeight(projectFieldsJTable.getRowHeight()+18);
 
         //ScrollPane displaying project fields
@@ -151,7 +149,7 @@ public class View {
 
         activityFieldsJTable = new JTable(activityTableModel);
         activityFieldsJTable.setDefaultEditor(Object.class,null);
-        activityFieldsJTable.setFont(new Font("Courier New", 0, 30));
+        activityFieldsJTable.setFont(new Font("Courier New", Font.PLAIN, 30));
         activityFieldsJTable.setRowHeight(activityFieldsJTable.getRowHeight()+18);
 
         //ScrollPane displaying activity fields

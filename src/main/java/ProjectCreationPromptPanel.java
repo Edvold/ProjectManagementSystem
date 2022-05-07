@@ -6,7 +6,7 @@ public class ProjectCreationPromptPanel extends PromptPanel {
 
     private String[] monthsNoDate = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "No Date"};
     private JTextField yearField = new JTextField(5);
-    private JComboBox monthField = new JComboBox(monthsNoDate);
+    private JComboBox<String> monthField = new JComboBox<>(monthsNoDate);
     private JTextField dayField = new JTextField(5);
 
     public ProjectCreationPromptPanel(){
@@ -27,7 +27,7 @@ public class ProjectCreationPromptPanel extends PromptPanel {
     }
 
     public int getYear(){
-        return Integer.valueOf(yearField.getText());
+        return Integer.parseInt(yearField.getText());
     }
 
     public int getMonth(){
@@ -35,7 +35,7 @@ public class ProjectCreationPromptPanel extends PromptPanel {
     }
 
     public int getDay(){
-        return Integer.valueOf(dayField.getText());
+        return Integer.parseInt(dayField.getText());
     }
 
     public boolean noDate(){

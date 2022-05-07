@@ -3,7 +3,7 @@ import javax.swing.*;
 public class ProjectDateChangePromptPanel extends PromptPanel {
 
     private String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    private JComboBox monthField = new JComboBox(months);
+    private JComboBox<String> monthField = new JComboBox<>(months);
     private JTextField dayField = new JTextField(5);
 
 
@@ -18,7 +18,7 @@ public class ProjectDateChangePromptPanel extends PromptPanel {
     }
 
     public int getYear(){
-        return Integer.valueOf(super.getInput());
+        return Integer.parseInt(super.getInput());
     }
 
     public int getMonth(){
@@ -26,7 +26,7 @@ public class ProjectDateChangePromptPanel extends PromptPanel {
     }
 
     public int getDay(){
-        return Integer.valueOf(dayField.getText());
+        return Integer.parseInt(dayField.getText());
     }
 
     public void clear(){
