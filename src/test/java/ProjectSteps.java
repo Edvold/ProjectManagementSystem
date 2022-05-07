@@ -4,15 +4,14 @@ import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ProjectSteps {
 
     private ErrorMessageHolder errorMessageHolder;
     private Project project;
     private LocalDateTime projectStartDate;
-    private ProjectManager projectManager;
+
     private String dummyName = "name";
     private Employee projectLeader;
 
@@ -22,11 +21,11 @@ public class ProjectSteps {
 
     @Given("The employee creates a project with today as the date")
     public void the_employee_creates_a_project_with_today_as_the_date() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -34,22 +33,6 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
 
-    }
-
-    @Given("The employee creates a project with a day after today as the date")
-    public void the_employee_creates_a_project_with_a_day_after_today_as_the_date() {
-        projectManager.getInstance().emptyList();
-        projectStartDate = LocalDateTime.now();
-        projectStartDate = projectStartDate.plusDays(1);
-        try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
-        }
-        catch (InvalidDateError error){
-            errorMessageHolder.setErrorMessage(error.getMessage());
-        } catch (DuplicateNameError e) {
-            errorMessageHolder.setErrorMessage(e.getMessage());
-        }
     }
 
     @Then("A project is created with the given date")
@@ -59,10 +42,10 @@ public class ProjectSteps {
     }
     @Given("An employee creates a project")
     public void an_employee_creates_a_project() throws DuplicateNameError {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         try {
-            projectManager.getInstance().createProject(dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (DuplicateNameError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -81,12 +64,12 @@ public class ProjectSteps {
 
     @Given("The employee creates a project with an invalid date")
     public void the_employee_creates_a_project_with_an_invalid_date() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.minusDays(1);
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -100,12 +83,12 @@ public class ProjectSteps {
     }
     @Given("A project already exists with the same name")
     public void a_project_already_exists_with_the_same_name() throws DuplicateNameError, InvalidDateError {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try{
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -120,8 +103,8 @@ public class ProjectSteps {
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try{
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            Project project1 = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            Project project1 = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -132,25 +115,24 @@ public class ProjectSteps {
 
     @Given("The date is valid for project")
     public void the_date_is_valid_for_project() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
-        projectStartDate = projectStartDate.plusDays(1);
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
         } catch (DuplicateNameError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
-        projectStartDate = projectStartDate.plusDays(1);
+        projectStartDate = projectStartDate.plusYears(1);
     }
 
     @When("The employee changes the start date of the project")
     public void the_employee_changes_the_start_date_of_the_project() {
         try {
-            projectManager.getInstance().changeProjectStartDate(project.getProjectName(),projectStartDate);
+            ProjectManager.getInstance().changeProjectStartDate(project.getProjectName(),projectStartDate);
         } catch (InvalidDateError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
@@ -163,12 +145,12 @@ public class ProjectSteps {
 
     @Given("The date is invalid")
     public void the_date_is_invalid() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -180,12 +162,12 @@ public class ProjectSteps {
 
     @Given("The new project leader is available")
     public void the_new_project_leader_is_available() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -214,13 +196,13 @@ public class ProjectSteps {
 
     @Given("The new project leader is unavailable")
     public void the_new_project_leader_is_unavailable() {
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try {
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -236,8 +218,8 @@ public class ProjectSteps {
         }
 
         try {
-            projectManager.getInstance().createProject(projectStartDate,"dummyName");
-            this.project = projectManager.getInstance().getProjectByName("dummyName");
+            ProjectManager.getInstance().createProject(projectStartDate,"dummyName");
+            this.project = ProjectManager.getInstance().getProjectByName("dummyName");
         }
         catch (InvalidDateError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -245,6 +227,11 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
         assertTrue(!projectLeader.isAvailable(projectStartDate,project.getExpectedEndDate()));
+    }
+    @Then("The project has the correct project number")
+    public void the_project_has_the_correct_project_number() {
+        String trueProjectNumber = String.valueOf(project.getStartDate().getYear()).substring(2) + "0001";
+        assertEquals(project.getProjectNumber(), trueProjectNumber);
     }
 
 
