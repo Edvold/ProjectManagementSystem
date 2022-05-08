@@ -62,7 +62,7 @@ public class Project {
                 totalBudgeted += ac.getBudgetedTime();
                 report.append("\n").append(ac.getName()).append(": ").append(hoursWorked).append("/").append(ac.getBudgetedTime());
             }
-            report.append("\nTotal:\n").append(totalWorked).append("/").append(totalBudgeted);
+            report.append("\nTotal: ").append(totalWorked).append("/").append(totalBudgeted);
             return report.toString();
         }
         else{

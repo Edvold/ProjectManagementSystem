@@ -72,12 +72,14 @@ public class Activity {
 
     public LocalDateTime getEndDate() {return endDate;}
 
-    public void addEmployee(Employee employee, Employee actor) throws IllegalArgumentException, MissingRequiredPermissionError {
-        if (!actor.equals(PROJECT.getProjectLeader())) throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
-        if (isEmployeeWorkingOnActivity(employee)) throw new IllegalArgumentException("The employee is already a part of the activity");
-        employeeList.add(employee);
-        employee.addActivity(this);
-    }
+        public void addEmployee(Employee employee, Employee actor) throws IllegalArgumentException, MissingRequiredPermissionError {
+            /* 1 */ if (!actor.equals(PROJECT.getProjectLeader()))
+                /* 1a */ throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
+            /* 2 */ if (isEmployeeWorkingOnActivity(employee))
+                /* 2a */ throw new IllegalArgumentException("The employee is already a part of the activity");
+            /* 3 */ employeeList.add(employee);
+            /* 4 */ employee.addActivity(this);
+        }
 
     public ArrayList<Employee> getAvailableEmployees() {
         return EmployeeManager.getInstance().getAvailableEmployees(startDate, endDate);

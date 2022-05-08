@@ -236,12 +236,12 @@ public class ProjectSteps {
     @Given("The project leader requests a report")
     public void the_project_leader_requests_a_report() {
         //create a project
-        projectManager.getInstance().emptyList();
+        ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try{
-            projectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = projectManager.getInstance().getProjectByName(dummyName);
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
         catch (InvalidDateError|DuplicateNameError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
@@ -299,8 +299,9 @@ public class ProjectSteps {
     @Then("The information is correct")
     public void the_information_is_correct() {
         String information = "Start Date: " + project.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + project.getExpectedEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
-                + "Activity Name: hours worked/budgeted time" + "\n"
-                + "Activity1: 12.0/20.0" + "\n" + "Activity2: 36.0/40.0";
+                + "Activity: Hours worked / Budgeted time:" + "\n"
+                + "Activity1: 12.0/20.0" + "\n" + "Activity2: 36.0/40.0" + "\n"
+                + "Total: 48.0/60.0" ;
         assertTrue(report.equals(information));
     }
 
