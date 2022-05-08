@@ -236,7 +236,7 @@ public class Controller {
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.changeBudgetedTimePromptPanel.getActorName();
             try {
-                int newBudgetedTime = Integer.parseInt(view.changeBudgetedTimePromptPanel.getFirstField());
+                double newBudgetedTime = Double.parseDouble(view.changeBudgetedTimePromptPanel.getFirstField());
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 currentActivity.setBudgetedTime(newBudgetedTime,actor);
                 view.changeBudgetedTimePromptPanel.clear();
@@ -259,10 +259,32 @@ public class Controller {
             Activity currentActivity = currentProject.getActivityByName(activityName);
             String actorName = view.registerHoursPromptPanel.getActorName();
             try {
-                int hours = Integer.parseInt(view.registerHoursPromptPanel.getFirstField());
+                double hours = Double.parseDouble(view.registerHoursPromptPanel.getFirstField());
                 Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
                 actor.registerHours(currentActivity,hours);
                 view.registerHoursPromptPanel.clear();
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public void unregisterHoursForActivity(){
+        int inputs = JOptionPane.showConfirmDialog(null, view.unregisterHoursPromptPanel, "Enter Hours and Your Initials", JOptionPane.OK_CANCEL_OPTION);
+        if(inputs == JOptionPane.OK_OPTION){
+            int index1 = view.projectFieldsJTable.getSelectedRow();
+            String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
+            Project currentProject = ProjectManager.getInstance().getProjectByName(projectName);
+            int index2 = view.activityFieldsJTable.getSelectedRow();
+            String activityName = (String) view.activityFieldsJTable.getValueAt(index2,0);
+            Activity currentActivity = currentProject.getActivityByName(activityName);
+            String actorName = view.unregisterHoursPromptPanel.getActorName();
+            try {
+                double hours = Double.parseDouble(view.unregisterHoursPromptPanel.getFirstField());
+                Employee actor = EmployeeManager.getInstance().getEmployeeByName(actorName);
+                actor.registerHours(currentActivity,hours);
+                view.unregisterHoursPromptPanel.clear();
             }
             catch (Exception e){
                 JOptionPane.showMessageDialog(null,e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);

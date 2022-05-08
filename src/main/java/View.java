@@ -33,10 +33,12 @@ public class View {
     protected JButton registerHoursButton;
     protected JButton getAvailableEmployeesButton;
     protected JButton goToPreviousScreenButton2;
+    protected JButton unregisterHoursButton;
     protected TwoFieldsActorPromptPanel addEmployeePromptPanel;
     protected TwoFieldsActorPromptPanel changeBudgetedTimePromptPanel;
     protected ActivityDatesChangePromptPanel activityDatesChangePromptPanel;
     protected TwoFieldsActorPromptPanel registerHoursPromptPanel;
+    protected TwoFieldsActorPromptPanel unregisterHoursPromptPanel;
     protected JList<String> reportFieldsJList;
     protected JScrollPane reportScrollPane;
     protected JList<String> availableEmployeesJList;
@@ -184,8 +186,8 @@ public class View {
         //Button to add Employee to Activity
         addEmployeeButton = new JButton();
         addEmployeeButton.setText("Add Employee");
-        addEmployeeButton.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        addEmployeeButton.setBounds(0, 0, screenWidth / 6, screenHeight / 4);
+        addEmployeeButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        addEmployeeButton.setBounds(0, 0, screenWidth / 7, screenHeight / 4);
         addEmployeeButton.setVisible(true);
         addEmployeeButton.setBackground(new Color(0x6f6f6f));
         addEmployeeButton.setForeground(new Color(0x000000));
@@ -194,8 +196,8 @@ public class View {
         //Button to change Dates for Activity
         changeActivityDatesButton = new JButton();
         changeActivityDatesButton.setText("Change Dates");
-        changeActivityDatesButton.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        changeActivityDatesButton.setBounds(screenWidth/6, 0, screenWidth / 6, screenHeight / 4);
+        changeActivityDatesButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        changeActivityDatesButton.setBounds(screenWidth/7, 0, screenWidth / 7, screenHeight / 4);
         changeActivityDatesButton.setVisible(true);
         changeActivityDatesButton.setBackground(new Color(0x6f6f6f));
         changeActivityDatesButton.setForeground(new Color(0x000000));
@@ -204,8 +206,8 @@ public class View {
         //Button to change BudgetedTime for Activity
         changeBudgetedTimeButton = new JButton();
         changeBudgetedTimeButton.setText("Change Budgeted Time");
-        changeBudgetedTimeButton.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        changeBudgetedTimeButton.setBounds(screenWidth/3, 0, screenWidth / 6, screenHeight / 4);
+        changeBudgetedTimeButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        changeBudgetedTimeButton.setBounds(2*screenWidth/7, 0, screenWidth / 7, screenHeight / 4);
         changeBudgetedTimeButton.setVisible(true);
         changeBudgetedTimeButton.setBackground(new Color(0x6f6f6f));
         changeBudgetedTimeButton.setForeground(new Color(0x000000));
@@ -214,18 +216,28 @@ public class View {
         //Button to register hours for activity
         registerHoursButton = new JButton();
         registerHoursButton.setText("Register Hours");
-        registerHoursButton.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        registerHoursButton.setBounds(screenWidth/2, 0, screenWidth / 6, screenHeight / 4);
+        registerHoursButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        registerHoursButton.setBounds(3*screenWidth/7, 0, screenWidth / 7, screenHeight / 4);
         registerHoursButton.setVisible(true);
         registerHoursButton.setBackground(new Color(0x6f6f6f));
         registerHoursButton.setForeground(new Color(0x000000));
         screens[2].add(registerHoursButton);
 
+        //Button to unregister hours
+        unregisterHoursButton = new JButton();
+        unregisterHoursButton.setText("Unregister Hours");
+        unregisterHoursButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        unregisterHoursButton.setBounds(4*screenWidth/7, 0, screenWidth / 7, screenHeight / 4);
+        unregisterHoursButton.setVisible(true);
+        unregisterHoursButton.setBackground(new Color(0x6f6f6f));
+        unregisterHoursButton.setForeground(new Color(0x000000));
+        screens[2].add(unregisterHoursButton);
+
         //Button to see available employees for activity
         getAvailableEmployeesButton = new JButton();
         getAvailableEmployeesButton.setText("Get Available Employees");
-        getAvailableEmployeesButton.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        getAvailableEmployeesButton.setBounds(2*screenWidth/3, 0, screenWidth / 6, screenHeight / 4);
+        getAvailableEmployeesButton.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        getAvailableEmployeesButton.setBounds(5*screenWidth/7, 0, screenWidth / 7, screenHeight / 4);
         getAvailableEmployeesButton.setVisible(true);
         getAvailableEmployeesButton.setBackground(new Color(0x6f6f6f));
         getAvailableEmployeesButton.setForeground(new Color(0x000000));
@@ -233,8 +245,8 @@ public class View {
 
         goToPreviousScreenButton2 = new JButton();
         goToPreviousScreenButton2.setText("Go to Previous Screen");
-        goToPreviousScreenButton2.setSize(new Dimension(screenWidth / 6, screenHeight / 4));
-        goToPreviousScreenButton2.setBounds(5*screenWidth / 6, 0, screenWidth / 6, screenHeight / 4);
+        goToPreviousScreenButton2.setSize(new Dimension(screenWidth / 7, screenHeight / 4));
+        goToPreviousScreenButton2.setBounds(6*screenWidth / 7, 0, screenWidth / 7, screenHeight / 4);
         goToPreviousScreenButton2.setVisible(true);
         goToPreviousScreenButton2.setBackground(new Color(0x6f6f6f));
         goToPreviousScreenButton2.setForeground(new Color(0x000000));
@@ -245,6 +257,7 @@ public class View {
         changeBudgetedTimePromptPanel = new TwoFieldsActorPromptPanel("New Budgeted Time");
         activityDatesChangePromptPanel = new ActivityDatesChangePromptPanel();
         registerHoursPromptPanel = new TwoFieldsActorPromptPanel("Hours to register");
+        unregisterHoursPromptPanel = new TwoFieldsActorPromptPanel("Hours to unregister");
 
         //Components for pop-up window to show available employees
         availableEmployeesJList = new JList<>();
@@ -285,5 +298,7 @@ public class View {
         goToPreviousScreenButton2.addActionListener(e -> controller.goToPreviousScreen());
 
         showReportButton.addActionListener(e -> controller.showReport());
+
+        unregisterHoursButton.addActionListener(e -> controller.unregisterHoursForActivity());
     }
 }
