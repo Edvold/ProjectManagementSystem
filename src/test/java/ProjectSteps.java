@@ -29,12 +29,9 @@ public class ProjectSteps {
             ProjectManager.getInstance().createProject(projectStartDate,dummyName);
             this.project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
-        catch (InvalidDateError error){
+        catch (InvalidDateError | DuplicateNameError error) {
             errorMessageHolder.setErrorMessage(error.getMessage());
-        } catch (DuplicateNameError e) {
-            errorMessageHolder.setErrorMessage(e.getMessage());
         }
-
     }
 
     @Then("A project is created with the given date")
@@ -142,8 +139,8 @@ public class ProjectSteps {
         assertTrue(project.getStartDate().equals(projectStartDate));
     }
 
-    @Given("The date is invalid")
-    public void the_date_is_invalid() {
+    @Given("The date is before today")
+    public void the_date_is_before_today() {
         ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
@@ -303,6 +300,26 @@ public class ProjectSteps {
                 + "Activity1: 12.0/20.0" + "\n" + "Activity2: 36.0/40.0" + "\n"
                 + "Total: 48.0/60.0" ;
         assertTrue(report.equals(information));
+    }
+    @Given("The date is after an activity's start date")
+    public void the_date_is_after_an_activity_s_start_date() throws DateNotInitializedError, DuplicateNameError, MissingRequiredPermissionError, InvalidDateError, EmployeeIsUnavailableError {
+        ProjectManager.getInstance().emptyList();
+        projectStartDate = LocalDateTime.now();
+        projectStartDate = projectStartDate.plusDays(1);
+        try {
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
+        }
+        catch (InvalidDateError error){
+            errorMessageHolder.setErrorMessage(error.getMessage());
+        } catch (DuplicateNameError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        projectLeader = new Employee("Carl");
+        project.setProjectLeader(projectLeader);
+        project.createActivity("test", LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(11), 10, projectLeader);
+        projectStartDate = projectStartDate.plusDays(11);
+        assertTrue(projectStartDate.isAfter(project.getActivityByName("test").getStartDate()));
     }
 
 
