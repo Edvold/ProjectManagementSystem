@@ -59,7 +59,7 @@ public class ActivitySteps {
         assertNotNull(project.getStartDate());
     }
     @Given("The employee is the project leader")
-    public void the_employee_is_the_project_leader() throws EmployeeIsUnavailableError {
+    public void the_employee_is_the_project_leader() {
         actor = projectLeader;
         assertEquals(actor, projectLeader);
     }
@@ -157,10 +157,11 @@ public class ActivitySteps {
     }
 
     @Given("The project does not have a start date")
-    public void the_project_does_not_have_a_start_date() throws DuplicateNameError {
+    public void the_project_does_not_have_a_start_date() throws DuplicateNameError, EmployeeIsUnavailableError {
         ProjectManager.getInstance().emptyList();
         ProjectManager.getInstance().createProject("Dummy"); // Making a project with no start date
         project = ProjectManager.getInstance().getProjectByName("Dummy");
+        project.setProjectLeader(projectLeader);
     }
 
     @Given("The budgeted time is valid")
