@@ -17,6 +17,8 @@ public class ProjectSteps {
     private Employee projectLeader;
     private String report;
 
+    private Employee actor;
+
     public ProjectSteps(ErrorMessageHolder errorMessageHolder){
         this.errorMessageHolder = errorMessageHolder;
     }
@@ -40,7 +42,7 @@ public class ProjectSteps {
         assertTrue(project.getStartDate().equals(projectStartDate));
     }
     @Given("An employee creates a project")
-    public void an_employee_creates_a_project() throws DuplicateNameError {
+    public void an_employee_creates_a_project() {
         ProjectManager.getInstance().emptyList();
         try {
             ProjectManager.getInstance().createProject(dummyName);
@@ -96,6 +98,7 @@ public class ProjectSteps {
 
     @When("An employee creates a project with the same name")
     public void an_employee_creates_a_project_with_the_same_name() throws DuplicateNameError, InvalidDateError {
+
         projectStartDate = LocalDateTime.now();
         projectStartDate = projectStartDate.plusDays(1);
         try{
@@ -179,7 +182,7 @@ public class ProjectSteps {
         try {
             project.setProjectLeader(projectLeader);
         }
-        catch (EmployeeIsUnavailableError e){
+        catch (EmployeeIsUnavailableError | IllegalArgumentException e){
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
 
@@ -230,8 +233,8 @@ public class ProjectSteps {
         assertEquals(project.getProjectNumber(), trueProjectNumber);
     }
 
-    @Given("The project leader requests a report")
-    public void the_project_leader_requests_a_report() {
+    @Given("The employee requests a report")
+    public void the_employee_requests_a_report() {
         //create a project
         ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
@@ -245,7 +248,6 @@ public class ProjectSteps {
         }
 
         //adding project leader
-        this.projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
         try {
             project.setProjectLeader(projectLeader);
         }
@@ -281,7 +283,7 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
         try {
-            this.report = project.getReport(projectLeader);
+            this.report = project.getReport(actor);
         } catch (MissingRequiredPermissionError e) {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
@@ -321,6 +323,48 @@ public class ProjectSteps {
         projectStartDate = projectStartDate.plusDays(11);
         assertTrue(projectStartDate.isAfter(project.getActivityByName("test").getStartDate()));
     }
-
+    @Given("The new project leader does not exist")
+    public void the_new_project_leader_does_not_exist() {
+        ProjectManager.getInstance().emptyList();
+        projectStartDate = LocalDateTime.now();
+        projectStartDate = projectStartDate.plusDays(1);
+        try {
+            ProjectManager.getInstance().createProject(projectStartDate,dummyName);
+            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
+        }
+        catch (InvalidDateError error){
+            errorMessageHolder.setErrorMessage(error.getMessage());
+        } catch (DuplicateNameError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        projectLeader = EmployeeManager.getInstance().getEmployeeByName("test1");
+        assertTrue(projectLeader == null);
+    }
+    @Given("An employee who is not the project leader requests a report")
+    public void an_employee_who_is_not_the_project_leader_requests_a_report() {
+        actor = EmployeeManager.getInstance().getEmployeeByName("mved");
+        projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
+        assertTrue(actor != projectLeader);
+    }
+    @Given("The employee who requests the report is the project leader")
+    public void the_employee_who_requests_the_report_is_the_project_leader() {
+        projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
+        actor = projectLeader;
+        assertTrue(projectLeader == actor);
+    }
+    @Given("A project without a date already exists with the same name")
+    public void a_project_without_a_date_already_exists_with_the_same_name() throws DuplicateNameError {
+        ProjectManager.getInstance().emptyList();
+        ProjectManager.getInstance().createProject(dummyName);
+        Project project1 = ProjectManager.getInstance().getProjectByName(dummyName);
+    }
+    @When("An employee creates a project without a date but with the same name")
+    public void an_employee_creates_a_project_without_a_date_but_with_the_same_name() {
+        try {
+            ProjectManager.getInstance().createProject(dummyName);
+        } catch (DuplicateNameError e) {
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+    }
 
 }

@@ -65,3 +65,8 @@ Feature: Create Activity
     Given The employee is not the project leader
     When The employee creates an activity
     Then An error is raised with message "Only the project leader can create an activity"
+
+  Scenario: Non-existent employee creates an activity
+    Given The employee does not exist
+    When The employee creates an activity
+    Then An error is raised with message "This employee doesn't exist"

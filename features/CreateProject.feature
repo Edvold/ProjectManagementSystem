@@ -20,3 +20,8 @@ Feature: Create Project
 		Given A project already exists with the same name
 		When An employee creates a project with the same name
 		Then An error is raised with message "Name is already in use"
+
+	Scenario: Employee creates a project without a date but with duplicate name
+		Given A project without a date already exists with the same name
+		When An employee creates a project without a date but with the same name
+		Then An error is raised with message "Name is already in use"

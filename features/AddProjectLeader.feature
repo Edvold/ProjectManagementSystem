@@ -11,3 +11,8 @@ Feature: Add project leader
     Given The new project leader is unavailable
     When The employee changes the project leader
     Then An error is raised with message "The new project leader is unavailable for this project"
+    
+  Scenario: Employee changes the project leader to an employee who does not exist
+    Given The new project leader does not exist
+    When The employee changes the project leader
+    Then An error is raised with message "This employee doesn't exist"

@@ -71,7 +71,7 @@ public class Project {
             return report.toString();
         }
         else{
-            throw new MissingRequiredPermissionError("You are not the Leader of this Project");
+            throw new MissingRequiredPermissionError("You are not the leader of this project");
         }
     }
 
@@ -110,7 +110,7 @@ public class Project {
         return false;
     }
 
-    public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError {
+    public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError, IllegalArgumentException {
 
         if(newProjectLeader == null) {
             throw new IllegalArgumentException("This employee doesn't exist");

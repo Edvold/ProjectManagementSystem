@@ -78,7 +78,7 @@ public class ActivitySteps {
     }
     @Given("The end date is valid")
     public void the_end_date_is_valid() {
-        activityEndDate = LocalDateTime.now().plusDays(20);
+        activityEndDate = LocalDateTime.now().plusYears(2);
         assertFalse(isDayBeforeDate(activityEndDate));
         assertTrue(isDayBeforeDate(activityStartDate, activityEndDate));
     }
@@ -288,18 +288,33 @@ public class ActivitySteps {
         }
         assertTrue(project.getActivityByName(activityName).isEmployeeWorkingOnActivity(extraEmployee));
     }
-
+    @Given("Some employees are not available")
+    public void some_employees_are_not_available() throws MissingRequiredPermissionError {
+        project.getActivityByName(activityName).addEmployee(EmployeeManager.getInstance().getEmployeeByName("mved"), projectLeader);
+        project.getActivityByName(activityName).addEmployee(EmployeeManager.getInstance().getEmployeeByName("bbje"), projectLeader);
+        project.getActivityByName(activityName).addEmployee(EmployeeManager.getInstance().getEmployeeByName("done"), projectLeader);
+    }
     @When("The employee requests available employees for that activity")
     public void the_employee_requests_available_employees_for_that_activity() {
+
         availableEmployees = project.getActivityByName(activityName).getAvailableEmployees();
     }
     @Then("The employee gets a list of available employees")
     public void the_employee_gets_a_list_of_available_employees() {
 
-        //Activity activity = project.getActivityByName(activityName);
+        ArrayList<Employee> actualAvailableEmployees = new ArrayList<>();
 
-        ArrayList<Employee> actualAvailableEmployees = EmployeeManager.getInstance().getAvailableEmployees(activityStartDate, activityEndDate);
+        ArrayList<Employee> employees = EmployeeManager.getInstance().getEmployees();
+
+        for (Employee employee : employees) {
+            if (employee.isAvailable(activityStartDate, activityEndDate)) actualAvailableEmployees.add(employee);
+        }
 
         assertEquals(actualAvailableEmployees, availableEmployees);
+    }
+    @Given("The employee does not exist")
+    public void the_employee_does_not_exist() {
+        actor = EmployeeManager.getInstance().getEmployeeByName("test1");
+        assertTrue(actor == null);
     }
 }
