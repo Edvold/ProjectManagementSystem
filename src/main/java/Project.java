@@ -91,10 +91,18 @@ public class Project {
     }
 
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
-        if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("Invalid date");
+        if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("The date cannot be before today");
+        if (isDateAfterActivityStartDate(startDate)) throw new InvalidDateError("The date cannot be after an activity's start date");
         if (startDate.getYear() != this.startDate.getYear()) updateProjectNumber(startDate.getYear());
         this.startDate = startDate;
 
+    }
+
+    private boolean isDateAfterActivityStartDate(LocalDateTime date) {
+        for (Activity activity : activities) {
+            if (date.truncatedTo(ChronoUnit.DAYS).isAfter(activity.getStartDate().truncatedTo(ChronoUnit.DAYS))) return true;
+        }
+        return false;
     }
 
     public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError {
