@@ -11,8 +11,9 @@ public class AddEmployeeWhitebox {
     private Activity activity;
     private Employee projectLeader;
     private LocalDateTime startDate;
+    private ErrorMessageHolder errorMessageHolder = new ErrorMessageHolder();
 
-    @Test (expected = MissingRequiredPermissionError.class)
+    @Test
     public void testDataSetA() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         startDate = LocalDateTime.now().plusDays(1);
         ProjectManager.getInstance().createProject(startDate,"project1");
@@ -23,10 +24,16 @@ public class AddEmployeeWhitebox {
         activity = project.getActivityByName("activity1");
         employee = EmployeeManager.getInstance().getEmployeeByName("ebi");
         actor = EmployeeManager.getInstance().getEmployeeByName("kaha");
-        activity.addEmployee(employee,actor);
+        try {
+            activity.addEmployee(employee,actor);
+        }
+        catch (MissingRequiredPermissionError e){
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        assertTrue(errorMessageHolder.getErrorMessage().equals("Only the project leader can change the data of an activity"));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void testDataSetB() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
         startDate = LocalDateTime.now().plusDays(1);
@@ -39,7 +46,13 @@ public class AddEmployeeWhitebox {
         employee = EmployeeManager.getInstance().getEmployeeByName("ebi");
         actor = EmployeeManager.getInstance().getEmployeeByName("done");
         activity.addEmployee(employee,actor);
-        activity.addEmployee(employee,actor);
+        try{
+            activity.addEmployee(employee,actor);
+        }
+        catch (IllegalArgumentException e){
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        assertTrue(errorMessageHolder.getErrorMessage().equals("The employee is already a part of the activity"));
     }
 
     @Test
