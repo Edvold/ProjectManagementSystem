@@ -34,7 +34,7 @@ public class RegisterHoursWhitebox {
         assertTrue(errorMessageHolder.getErrorMessage().equals("You don't work on this activity"));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void testDataSetB() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
         startDate = LocalDateTime.now().plusDays(1);
@@ -46,7 +46,14 @@ public class RegisterHoursWhitebox {
         activity = project.getActivityByName("activity1");
         employee = EmployeeManager.getInstance().getEmployeeByName("ebi");
         activity.addEmployee(employee,projectLeader);
-        employee.registerHours(activity,-1);
+
+        try{
+            employee.registerHours(activity,-1);
+        }
+        catch (IllegalArgumentException e){
+            errorMessageHolder.setErrorMessage(e.getMessage());
+        }
+        assertTrue(errorMessageHolder.getErrorMessage().equals("You need to input a positive amount of hours"));
     }
 
     @Test
