@@ -19,22 +19,22 @@ public class Employee {
 
     // Written by Bjarke Bak Jensen s214957
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
-       /* 1 */ List<Project> projects = ProjectManager.getInstance().getProjects();
-        /* 2 */ for (Project project : projects) {
+        List<Project> projects = ProjectManager.getInstance().getProjects();
+        for (Project project : projects) {
             // Check if the employee is the project leader on a project with overlapping dates
-            /* 3 */ if (project.getProjectLeader() == null)
-                /* 3a */ continue;
-            /* 4 */ if (!project.getProjectLeader().equals(this))
-                /* 4a */ continue;
-            /* 5 */ if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate))
-                /* 5a */ return false;
+            if (project.getProjectLeader() == null)
+                continue;
+            if (!project.getProjectLeader().equals(this))
+                continue;
+            if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate))
+                return false;
         }
-        /* 6 */ Set<Activity> activities = activityHours.keySet();
+        Set<Activity> activities = activityHours.keySet();
 
-        /* 7 */ for (Activity activity : activities) {
-            /* 8 */ if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
+        for (Activity activity : activities) {
+            if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
         }
-        /* 9 */ return true;
+        return true;
     }
 
     // Written by Mathias Edvold s214973
@@ -53,7 +53,7 @@ public class Employee {
         return activityHours.containsKey(activity);
     }
 
-    // Written by Bjarke Bak Jensen s214957
+    // Written by Mathias Edvold 214973
     public void registerHours(Activity activity, double hours) throws IllegalArgumentException {
         /* 1 */ if (!isWorkingOnActivity(activity))
             /* 1a */ throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
