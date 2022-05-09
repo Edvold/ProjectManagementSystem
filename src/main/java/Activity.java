@@ -92,8 +92,4 @@ public class Activity {
     public boolean isEmployeeWorkingOnActivity(Employee employee) {
         return employeeList.contains(employee);
     }
-
-    public Project getProject() {
-        return PROJECT;
-    }
 }
