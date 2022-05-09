@@ -121,19 +121,20 @@ public class ProjectSteps {
     }
     // Written by Bjarke Bak Jensen s214957
     @Given("The date is valid for project")
-    public void the_date_is_valid_for_project() {
+    public void the_date_is_valid_for_project() throws DateNotInitializedError, DuplicateNameError, MissingRequiredPermissionError, InvalidDateError, EmployeeIsUnavailableError {
         ProjectManager.getInstance().emptyList();
         projectStartDate = LocalDateTime.now();
         try {
             ProjectManager.getInstance().createProject(projectStartDate,dummyName);
-            this.project = ProjectManager.getInstance().getProjectByName(dummyName);
+            project = ProjectManager.getInstance().getProjectByName(dummyName);
         }
-        catch (InvalidDateError error){
+        catch (InvalidDateError | DuplicateNameError error){
             errorMessageHolder.setErrorMessage(error.getMessage());
-        } catch (DuplicateNameError e) {
-            errorMessageHolder.setErrorMessage(e.getMessage());
         }
+        projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
+        project.setProjectLeader(projectLeader);
         projectStartDate = projectStartDate.plusYears(1);
+        project.createActivity("test", projectStartDate, projectStartDate.plusDays(1), 20, projectLeader);
     }
     // Written by Bjarke Bak Jensen s214957
     @When("The employee changes the start date of the project")
