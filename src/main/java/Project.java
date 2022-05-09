@@ -34,7 +34,7 @@ public class Project {
         /* 2 */ if (!actor.equals(projectLeader))
             /* 2a */ throw new MissingRequiredPermissionError("Only the project leader can create an activity");
         /* 3 */ if (this.startDate == null)
-            /* 3a */ throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
+            /* 3a */ throw new DateNotInitializedError("Cannot create activity before the start date of the project is set");
         /* 4 */ if (hasActivityWithName(name))
             /* 4a */ throw new DuplicateNameError("Name is already in use");
         /* 5 */ if(endDate.isAfter(expectedEndDate))
