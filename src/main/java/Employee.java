@@ -59,7 +59,10 @@ public class Employee {
             /* 1a */ throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
         /* 2 */ if (hours <= 0)
             /* 2a */ throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
+        /* pre condition */ assert isWorkingOnActivity(activity) && hours > 0;
+        double preHours = activityHours.get(activity);
         /* 3 */ activityHours.compute(activity, (k, v) -> v + hours);
+        /* post condition */ assert preHours + hours == activityHours.get(activity);
     }
 
     // Written by Bjarke Bak Jensen s214957

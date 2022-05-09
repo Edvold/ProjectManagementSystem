@@ -88,8 +88,11 @@ public class Activity {
             /* 1a */ throw new MissingRequiredPermissionError(ONLY_PROJECT_LEADER_HAS_PERMISSION_ERROR);
         /* 2 */ if (isEmployeeWorkingOnActivity(employee))
             /* 2a */ throw new IllegalArgumentException("The employee is already a part of the activity");
+        /* pre condition */ assert actor.equals(PROJECT.getProjectLeader()) && !isEmployeeWorkingOnActivity(employee);
+        int preEmployeeListSize = employeeList.size();
         /* 3 */ employeeList.add(employee);
         /* 4 */ employee.addActivity(this);
+        /* post condition */ assert employeeList.size() == preEmployeeListSize+1 && employeeList.contains(employee) && employee.isWorkingOnActivity(this);
     }
 
     // Written by Bjarke Bak Jensen s214957
