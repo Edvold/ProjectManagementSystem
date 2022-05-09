@@ -1,6 +1,6 @@
 STARTSKÆRM:
 Man starter med at komme til en skærm hvor man kan klikke på knappen "Create Project."
-Her kan man lave et project med eller uden dato (uden dato ved at vælge "no date" i months og lade de andre dato felter være tomme).
+Her kan man lave et projekt med eller uden dato (uden dato ved at vælge "no date" i months og lade de andre dato felter være tomme).
 Når man har lavet et projekt bliver det vist på skærmen, og man kan nu dobbeltklikke på det, for at komme til projektskærmen.
 
 PROJECTSKÆRM:
