@@ -29,14 +29,19 @@ public class Project {
     }
 
     public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime, Employee actor) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException, MissingRequiredPermissionError {
-        if(actor == null) throw new IllegalArgumentException("This employee doesn't exist");
-        if (!actor.equals(projectLeader)) throw new MissingRequiredPermissionError("Only the project leader can create an activity");
-        if (this.startDate == null) throw new DateNotInitializedError("Cannot create activity before the start date of the project is set"); // IMPLEMENT IN TEST
-        if (hasActivityWithName(name)) throw new DuplicateNameError("Name is already in use");
-
-        if(endDate.isAfter(expectedEndDate)) expectedEndDate = endDate;
-        if(activities.isEmpty()) expectedEndDate = endDate;
-        activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
+        /* 1 */ if(actor == null)
+            /* 1a */ throw new IllegalArgumentException("This employee doesn't exist");
+        /* 2 */ if (!actor.equals(projectLeader))
+            /* 2a */ throw new MissingRequiredPermissionError("Only the project leader can create an activity");
+        /* 3 */ if (this.startDate == null)
+            /* 3a */ throw new DateNotInitializedError("Cannot create activity before the start date of the project is set");
+        /* 4 */ if (hasActivityWithName(name))
+            /* 4a */ throw new DuplicateNameError("Name is already in use");
+        /* 5 */ if(endDate.isAfter(expectedEndDate))
+            /* 5a */ expectedEndDate = endDate;
+        /* 6 */ if(activities.isEmpty())
+            /* 6a */ expectedEndDate = endDate;
+        /* 7 */ activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
     }
 
     public Activity getActivityByName(String name) {

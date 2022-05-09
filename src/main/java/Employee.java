@@ -16,21 +16,22 @@ public class Employee {
     }
 
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Project> projects = ProjectManager.getInstance().getProjects();
-
-        for (Project project : projects) {
+       /* 1 */ List<Project> projects = ProjectManager.getInstance().getProjects();
+        /* 2 */ for (Project project : projects) {
             // Check if the employee is the project leader on a project with overlapping dates
-            if (project.getProjectLeader() == null) continue;
-            if (!project.getProjectLeader().equals(this)) continue;
-            if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate)) return false;
+            /* 3 */ if (project.getProjectLeader() == null)
+                /* 3a */ continue;
+            /* 4 */ if (!project.getProjectLeader().equals(this))
+                /* 4a */ continue;
+            /* 5 */ if (isBetweenDates(project.getStartDate(), project.getExpectedEndDate(), startDate, endDate))
+                /* 5a */ return false;
         }
+        /* 6 */ Set<Activity> activities = activityHours.keySet();
 
-        Set<Activity> activities = activityHours.keySet();
-
-        for (Activity activity : activities) {
-            if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
+        /* 7 */ for (Activity activity : activities) {
+            /* 8 */ if (isBetweenDates(activity.getStartDate(), activity.getEndDate(), startDate, endDate)) return false;
         }
-        return true;
+        /* 9 */ return true;
     }
 
     private boolean isBetweenDates(LocalDateTime eventStartDate, LocalDateTime eventEndDate, LocalDateTime startDate, LocalDateTime endDate) {
@@ -47,10 +48,11 @@ public class Employee {
     }
 
     public void registerHours(Activity activity, double hours) throws IllegalArgumentException {
-        if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
-        if (hours <= 0) throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
-        activityHours.compute(activity, (k, v) -> v + hours);
-
+        /* 1 */ if (!isWorkingOnActivity(activity))
+            /* 1a */ throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
+        /* 2 */ if (hours <= 0)
+            /* 2a */ throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
+        /* 3 */ activityHours.compute(activity, (k, v) -> v + hours);
     }
 
     public void unregisterHours(Activity activity, double hours) throws IllegalArgumentException {
