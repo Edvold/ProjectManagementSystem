@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
+// Written by Mathias Edvold s214973
 public class RegisterHoursWhitebox {
     private Project project;
     private Employee employee;
@@ -14,6 +15,7 @@ public class RegisterHoursWhitebox {
     private ErrorMessageHolder errorMessageHolder = new ErrorMessageHolder();
 
 
+    // Written by Mathias Edvold s214973
     @Test
     public void testDataSetA() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
@@ -34,6 +36,7 @@ public class RegisterHoursWhitebox {
         assertTrue(errorMessageHolder.getErrorMessage().equals("You don't work on this activity"));
     }
 
+    // Written by Mathias Edvold s214973
     @Test
     public void testDataSetB() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
@@ -56,6 +59,7 @@ public class RegisterHoursWhitebox {
         assertTrue(errorMessageHolder.getErrorMessage().equals("You need to input a positive amount of hours"));
     }
 
+    // Written by Mathias Edvold s214973
     @Test
     public void testDataSetC() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();

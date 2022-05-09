@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.*;
 
+// Written by Bjarke Bak Jensen s214957
 public class ProjectSteps {
 
     private ErrorMessageHolder errorMessageHolder;
@@ -19,10 +20,12 @@ public class ProjectSteps {
 
     private Employee actor;
 
+    // Written by Bjarke Bak Jensen s214957
     public ProjectSteps(ErrorMessageHolder errorMessageHolder){
         this.errorMessageHolder = errorMessageHolder;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     @Given("The employee creates a project with today as the date")
     public void the_employee_creates_a_project_with_today_as_the_date() {
         ProjectManager.getInstance().emptyList();
@@ -36,11 +39,13 @@ public class ProjectSteps {
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     @Then("A project is created with the given date")
     public void a_project_is_created_with_the_given_date() {
         assertTrue(project != null);
         assertTrue(project.getStartDate().equals(projectStartDate));
     }
+    // Written by Bjarke Bak Jensen s214957
     @Given("An employee creates a project")
     public void an_employee_creates_a_project() {
         ProjectManager.getInstance().emptyList();
@@ -53,16 +58,17 @@ public class ProjectSteps {
         }
 
     }
+    // Written by Mathias Edvold s214973
     @Then("A project is created")
     public void a_project_is_created() {
         assertNotNull(project);
     }
-
+    // Written by Mathias Edvold s214973
     @Then("The date of the project is not initialized")
     public void the_date_of_the_project_is_not_initialized() {
         assertTrue(project.getStartDate() == null);
     }
-
+    // Written by Mathias Edvold s214973
     @Given("The employee creates a project with an invalid date")
     public void the_employee_creates_a_project_with_an_invalid_date() {
         ProjectManager.getInstance().emptyList();
@@ -78,10 +84,12 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
+    // Written by Mathias Edvold s214973
     @Then("An error is raised with message {string}")
     public void an_error_is_raised_with_message(String string) {
         assertTrue(string.equals(errorMessageHolder.getErrorMessage()));
     }
+    // Written by Bjarke Bak Jensen s214957
     @Given("A project already exists with the same name")
     public void a_project_already_exists_with_the_same_name() throws DuplicateNameError, InvalidDateError {
         ProjectManager.getInstance().emptyList();
@@ -95,7 +103,7 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(error.getMessage());
         }
     }
-
+    // Written by Bjarke Bak Jensen s214957
     @When("An employee creates a project with the same name")
     public void an_employee_creates_a_project_with_the_same_name() throws DuplicateNameError, InvalidDateError {
 
@@ -111,7 +119,7 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
-
+    // Written by Bjarke Bak Jensen s214957
     @Given("The date is valid for project")
     public void the_date_is_valid_for_project() {
         ProjectManager.getInstance().emptyList();
@@ -127,7 +135,7 @@ public class ProjectSteps {
         }
         projectStartDate = projectStartDate.plusYears(1);
     }
-
+    // Written by Bjarke Bak Jensen s214957
     @When("The employee changes the start date of the project")
     public void the_employee_changes_the_start_date_of_the_project() {
         try {
@@ -136,12 +144,12 @@ public class ProjectSteps {
             errorMessageHolder.setErrorMessage(e.getMessage());
         }
     }
-
+    // Written by Bjarke Bak Jensen s214957
     @Then("The project start date is the new date")
     public void the_project_start_date_is_the_new_date() {
         assertTrue(project.getStartDate().equals(projectStartDate));
     }
-
+    // Written by Mathias Edvold s214973
     @Given("The date is before today")
     public void the_date_is_before_today() {
         ProjectManager.getInstance().emptyList();
@@ -158,7 +166,7 @@ public class ProjectSteps {
         }
         projectStartDate = projectStartDate.minusDays(2);
     }
-
+    // Written by Mathias Edvold s214973
     @Given("The new project leader is available")
     public void the_new_project_leader_is_available() {
         ProjectManager.getInstance().emptyList();
@@ -176,7 +184,7 @@ public class ProjectSteps {
         projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
         assertTrue(projectLeader.isAvailable(projectStartDate,project.getExpectedEndDate()));
     }
-
+    // Written by Mathias Edvold s214973
     @When("The employee changes the project leader")
     public void the_employee_changes_the_project_leader() throws EmployeeIsUnavailableError {
         try {
@@ -187,12 +195,12 @@ public class ProjectSteps {
         }
 
     }
-
+    // Written by Mathias Edvold s214973
     @Then("The project leader is changed to the new project leader")
     public void the_project_leader_is_changed_to_the_new_project_leader() {
         assertTrue(project.getProjectLeader().equals(projectLeader));
     }
-
+    // Written by Bjarke Bak Jensen s214957
     @Given("The new project leader is unavailable")
     public void the_new_project_leader_is_unavailable() {
         ProjectManager.getInstance().emptyList();
@@ -227,12 +235,13 @@ public class ProjectSteps {
         }
         assertTrue(!projectLeader.isAvailable(projectStartDate,project.getExpectedEndDate()));
     }
+    // Written by Bjarke Bak Jensen s214957
     @Then("The project has the correct project number")
     public void the_project_has_the_correct_project_number() {
         String trueProjectNumber = String.valueOf(project.getStartDate().getYear()).substring(2) + "0001";
         assertEquals(project.getProjectNumber(), trueProjectNumber);
     }
-
+    // Written by Mathias Edvold s214973
     @Given("The employee requests a report")
     public void the_employee_requests_a_report() {
         //create a project
@@ -289,12 +298,12 @@ public class ProjectSteps {
         }
 
     }
-
+    // Written by Mathias Edvold s214973
     @Then("The project leader receives a report")
     public void the_project_leader_receives_a_report() {
         assertTrue(!report.equals(null));
     }
-
+    // Written by Mathias Edvold s214973
     @Then("The information is correct")
     public void the_information_is_correct() {
         String information = "Start Date: " + project.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n" + "End Date: " + project.getExpectedEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n"
@@ -303,6 +312,7 @@ public class ProjectSteps {
                 + "Total: 48.0/60.0" ;
         assertTrue(report.equals(information));
     }
+    // Written by Mathias Edvold s214973
     @Given("The date is after an activity's start date")
     public void the_date_is_after_an_activity_s_start_date() throws DateNotInitializedError, DuplicateNameError, MissingRequiredPermissionError, InvalidDateError, EmployeeIsUnavailableError {
         ProjectManager.getInstance().emptyList();
@@ -323,6 +333,7 @@ public class ProjectSteps {
         projectStartDate = projectStartDate.plusDays(11);
         assertTrue(projectStartDate.isAfter(project.getActivityByName("test").getStartDate()));
     }
+    // Written by Mathias Edvold s214973
     @Given("The new project leader does not exist")
     public void the_new_project_leader_does_not_exist() {
         ProjectManager.getInstance().emptyList();
@@ -340,24 +351,28 @@ public class ProjectSteps {
         projectLeader = EmployeeManager.getInstance().getEmployeeByName("test1");
         assertTrue(projectLeader == null);
     }
+    // Written by Mathias Edvold s214973
     @Given("An employee who is not the project leader requests a report")
     public void an_employee_who_is_not_the_project_leader_requests_a_report() {
         actor = EmployeeManager.getInstance().getEmployeeByName("mved");
         projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
         assertTrue(actor != projectLeader);
     }
+    // Written by Mathias Edvold s214973
     @Given("The employee who requests the report is the project leader")
     public void the_employee_who_requests_the_report_is_the_project_leader() {
         projectLeader = EmployeeManager.getInstance().getEmployeeByName("done");
         actor = projectLeader;
         assertTrue(projectLeader == actor);
     }
+    // Written by Bjarke Bak Jensen s214957
     @Given("A project without a date already exists with the same name")
     public void a_project_without_a_date_already_exists_with_the_same_name() throws DuplicateNameError {
         ProjectManager.getInstance().emptyList();
         ProjectManager.getInstance().createProject(dummyName);
         Project project1 = ProjectManager.getInstance().getProjectByName(dummyName);
     }
+    // Written by Bjarke Bak Jensen s214957
     @When("An employee creates a project without a date but with the same name")
     public void an_employee_creates_a_project_without_a_date_but_with_the_same_name() {
         try {

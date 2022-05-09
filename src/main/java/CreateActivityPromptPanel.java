@@ -1,5 +1,6 @@
 import javax.swing.*;
 
+// Written by Mathias Edvold s214973
 public class CreateActivityPromptPanel extends PromptPanel {
 
     private String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -11,7 +12,8 @@ public class CreateActivityPromptPanel extends PromptPanel {
     private JTextField endDayField = new JTextField(5);
     private JTextField budgetedTimeField = new JTextField(5);
     private JTextField employeeField = new JTextField(5);
-    
+
+    // Written by Mathias Edvold s214973
     public CreateActivityPromptPanel(){
         super("Name");
         JPanel row1 = new JPanel();
@@ -48,42 +50,52 @@ public class CreateActivityPromptPanel extends PromptPanel {
         this.add(row3);
     }
 
+    // Written by Mathias Edvold s214973
     public String getTheName(){
         return super.getInput();
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartYear(){
         return Integer.parseInt(startYearField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartMonth(){
         return startMonthField.getSelectedIndex()+1;
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartDay(){
         return Integer.parseInt(startDayField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndYear(){
         return Integer.parseInt(endYearField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndMonth(){
         return endMonthField.getSelectedIndex()+1;
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndDay(){
         return Integer.parseInt(endDayField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public double getExpectedTime(){
         return Double.parseDouble(budgetedTimeField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public String getEmployeeName(){
         return employeeField.getText();
     }
 
+    // Written by Mathias Edvold s214973
     public void clear(){
         super.clear();
         startYearField.setText("");

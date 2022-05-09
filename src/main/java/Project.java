@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
+// Written by Mathias Edvold s214973
 public class Project {
 
     private String projectNumber;
@@ -12,6 +12,7 @@ public class Project {
     private Employee projectLeader;
     private ArrayList<Activity> activities = new ArrayList<>();
 
+    // Written by Mathias Edvold s214973
     public Project(LocalDateTime startDate, String projectName, String projectNumber) throws InvalidDateError {
         if (startDate == null) throw new InvalidDateError("There is missing information about the date");
         if(startDate.truncatedTo(ChronoUnit.DAYS).compareTo(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)) < 0){
@@ -23,11 +24,12 @@ public class Project {
         this.projectName=projectName;
         this.projectNumber = String.valueOf(startDate.getYear()).substring(2) + projectNumber;
     }
-
+    // Written by Mathias Edvold s214973
     public Project(String projectName){
         this.projectName=projectName;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void createActivity(String name, LocalDateTime startDate, LocalDateTime endDate, double budgetedTime, Employee actor) throws InvalidDateError, DuplicateNameError, DateNotInitializedError, IllegalArgumentException, MissingRequiredPermissionError {
         /* 1 */ if(actor == null)
             /* 1a */ throw new IllegalArgumentException("This employee doesn't exist");
@@ -44,6 +46,7 @@ public class Project {
         /* 7 */ activities.add(new Activity(name, startDate, endDate, this, budgetedTime));
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public Activity getActivityByName(String name) {
         for (Activity a : activities) {
             if (a.getName().equals(name)) return a;
@@ -51,6 +54,7 @@ public class Project {
         return null;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public String getReport(Employee actor) throws MissingRequiredPermissionError {
         if (actor == null) throw new IllegalArgumentException("This employee doesn't exist");
         if(actor.equals(this.projectLeader)){
@@ -75,26 +79,32 @@ public class Project {
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public boolean hasActivityWithName(String name) {
         return getActivityByName(name) != null;
     }
 
+    // Written by Mathias Edvold s214973
     public LocalDateTime getStartDate(){
         return this.startDate;
     }
 
+    // Written by Mathias Edvold s214973
     public LocalDateTime getExpectedEndDate() {
         return expectedEndDate;
     }
 
+    // Written by Mathias Edvold s214973
     public String getProjectName() {
         return projectName;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public String getProjectNumber() {
         return projectNumber;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void setStartDate(LocalDateTime startDate) throws InvalidDateError {
         if (!startDate.isAfter(LocalDateTime.now())) throw new InvalidDateError("The date cannot be before today");
         if (isDateAfterActivityStartDate(startDate)) throw new InvalidDateError("The date cannot be after an activity's start date");
@@ -103,6 +113,7 @@ public class Project {
 
     }
 
+    // Written by Bjarke Bak Jensen s214957
     private boolean isDateAfterActivityStartDate(LocalDateTime date) {
         for (Activity activity : activities) {
             if (date.truncatedTo(ChronoUnit.DAYS).isAfter(activity.getStartDate().truncatedTo(ChronoUnit.DAYS))) return true;
@@ -110,6 +121,7 @@ public class Project {
         return false;
     }
 
+    // Written by Mathias Edvold s214973
     public void setProjectLeader(Employee newProjectLeader) throws EmployeeIsUnavailableError, IllegalArgumentException {
 
         if(newProjectLeader == null) {
@@ -124,10 +136,12 @@ public class Project {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public Employee getProjectLeader() {
         return projectLeader;
     }
 
+    // Written by Mathias Edvold s214973
     private void updateProjectNumber(int year) {
         projectNumber = String.valueOf(year).substring(2) + ProjectManager.getInstance().computeProjectNumber(year);
     }

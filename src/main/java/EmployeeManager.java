@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// Written by Mathias Edvold s214973
 public class EmployeeManager {
 
     private static ArrayList<Employee> employees = new ArrayList();
@@ -11,6 +12,7 @@ public class EmployeeManager {
 
     private EmployeeManager(){}
 
+    // Written by Mathias Edvold s214973
     public static EmployeeManager getInstance() {
         if(instance == null) {
             instance = new EmployeeManager();
@@ -39,6 +41,7 @@ public class EmployeeManager {
         return instance;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public Employee getEmployeeByName(String name){
         for(Employee employee : employees){
             if(employee.getName().equals(name)){
@@ -48,6 +51,7 @@ public class EmployeeManager {
         return null;
     }
 
+    // Written by Mathias Edvold s214973
     public ArrayList<Employee> getAvailableEmployees(LocalDateTime startDate, LocalDateTime endDate) {
         ArrayList<Employee> availableEmployees = new ArrayList<>();
         for (Employee employee : employees) {
@@ -57,6 +61,7 @@ public class EmployeeManager {
         return availableEmployees;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public ArrayList<Employee> getEmployees() {
         return employees;
     }

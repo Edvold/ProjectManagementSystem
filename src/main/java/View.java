@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+// Written by Bjarke Bak Jensen s214957
 public class View {
 
     private Controller controller = new Controller(this);
@@ -44,6 +45,7 @@ public class View {
     protected JList<String> availableEmployeesJList;
     protected JScrollPane availableEmployeesScrollPane;
 
+    // Written by Bjarke Bak Jensen s214957
     public void startView() {
 
         //Creating panel array with panels for each screen in the program

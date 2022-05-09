@@ -1,5 +1,6 @@
 import javax.swing.*;
 
+// Written by Mathias Edvold s214973
 public class ActivityDatesChangePromptPanel extends PromptPanel{
 
     private String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -10,6 +11,7 @@ public class ActivityDatesChangePromptPanel extends PromptPanel{
     private JComboBox<String> endMonthField = new JComboBox<>(months);
     private JTextField endDayField = new JTextField(5);
 
+    // Written by Mathias Edvold s214973
     public ActivityDatesChangePromptPanel() {
         super("Your Initials");
         JPanel row1 = new JPanel();
@@ -38,34 +40,42 @@ public class ActivityDatesChangePromptPanel extends PromptPanel{
         this.add(row2);
     }
 
+    // Written by Mathias Edvold s214973
     public String getActorName(){
         return super.getInput();
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartYear(){
         return Integer.parseInt(startYearField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartMonth(){
         return startMonthField.getSelectedIndex()+1;
     }
 
+    // Written by Mathias Edvold s214973
     public int getStartDay(){
         return Integer.parseInt(startDayField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndYear(){
         return Integer.parseInt(endYearField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndMonth(){
         return endMonthField.getSelectedIndex()+1;
     }
 
+    // Written by Mathias Edvold s214973
     public int getEndDay(){
         return Integer.parseInt(endDayField.getText());
     }
 
+    // Written by Mathias Edvold s214973
     public void clear(){
         super.clear();
         startYearField.setText("");

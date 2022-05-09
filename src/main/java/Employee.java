@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Set;
 
+// Written by Bjarke Bak Jensen s214957
 public class Employee {
 
     private final String NAME;
@@ -11,10 +12,12 @@ public class Employee {
     private final String NOT_WORKING_ON_ACTIVITY_ERROR = "You don't work on this activity";
     private final String ILLEGAL_HOURS_AMOUNT_ERROR = "You need to input a positive amount of hours";
 
+    // Written by Bjarke Bak Jensen s214957
     public Employee(String name) {
         this.NAME = name;
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public boolean isAvailable(LocalDateTime startDate, LocalDateTime endDate) {
        /* 1 */ List<Project> projects = ProjectManager.getInstance().getProjects();
         /* 2 */ for (Project project : projects) {
@@ -34,19 +37,23 @@ public class Employee {
         /* 9 */ return true;
     }
 
+    // Written by Mathias Edvold s214973
     private boolean isBetweenDates(LocalDateTime eventStartDate, LocalDateTime eventEndDate, LocalDateTime startDate, LocalDateTime endDate) {
         return (!eventStartDate.isBefore(startDate) && !eventStartDate.isAfter(endDate)) || (!eventEndDate.isAfter(endDate) && !eventStartDate.isBefore(startDate));
     }
 
+    // Written by Mathias Edvold s214973
     public void addActivity(Activity activity) throws IllegalArgumentException {
         if (isWorkingOnActivity(activity)) throw new IllegalArgumentException("The employee is already working on this project");
         activityHours.put(activity, 0d);
     }
 
+    // Written by Mathias Edvold s214973
     public boolean isWorkingOnActivity(Activity activity) {
         return activityHours.containsKey(activity);
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void registerHours(Activity activity, double hours) throws IllegalArgumentException {
         /* 1 */ if (!isWorkingOnActivity(activity))
             /* 1a */ throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
@@ -55,6 +62,7 @@ public class Employee {
         /* 3 */ activityHours.compute(activity, (k, v) -> v + hours);
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void unregisterHours(Activity activity, double hours) throws IllegalArgumentException {
         if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
         if (hours <= 0) throw new IllegalArgumentException(ILLEGAL_HOURS_AMOUNT_ERROR);
@@ -62,11 +70,13 @@ public class Employee {
         else activityHours.compute(activity, (k, v) -> v - hours);
     }
 
+    // Written by Mathias Edvold s214973
     public double getHours(Activity activity) {
         if (!isWorkingOnActivity(activity)) throw new IllegalArgumentException(NOT_WORKING_ON_ACTIVITY_ERROR);
         return activityHours.get(activity);
     }
 
+    // Written by Mathias Edvold s214973
     public String getName() {
         return NAME;
     }

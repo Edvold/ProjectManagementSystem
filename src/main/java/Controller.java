@@ -4,15 +4,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+// Written by Mathias Edvold s214973
 public class Controller {
 
     public int currentScreen = 0;
     private View view;
 
+    // Written by Mathias Edvold s214973
     public Controller(View view){
         this.view = view;
     }
 
+    // Written by Mathias Edvold s214973
     public void CreateAProject(){
         int inputs = JOptionPane.showConfirmDialog(null,view.projectCreationPromptPanel,"Enter name and date",JOptionPane.OK_CANCEL_OPTION);
             if(inputs == JOptionPane.OK_OPTION){
@@ -59,12 +62,14 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void changeToProjectScreen(MouseEvent e) {
         if ((e.getClickCount() == 2) & (view.projectFieldsJTable.getSelectedRow() >= 0)) {
             changeScreen();
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void changeProjectStartDate(){
         int inputs = JOptionPane.showConfirmDialog(null, view.projectDateChangePromptPanel, "Enter new date", JOptionPane.OK_CANCEL_OPTION);
         if (inputs == JOptionPane.OK_OPTION) {
@@ -91,6 +96,7 @@ public class Controller {
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void createAnActivity(){
         int inputs = JOptionPane.showConfirmDialog(null, view.createActivityPromptPanel, "Enter Name, Start Date and End Date", JOptionPane.OK_CANCEL_OPTION);
         if (inputs == JOptionPane.OK_OPTION) {
@@ -126,6 +132,7 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void addAProjectLeader(){
         int inputs = JOptionPane.showConfirmDialog(null, view.addAProjectLeaderPromptPanel, "Enter Initials of new Project Leader", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
@@ -145,12 +152,14 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void changeToActivityScreen(MouseEvent e){
         if ((e.getClickCount() == 2) & (view.activityFieldsJTable.getSelectedRow() >= 0)) {
             changeScreen();
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void goToPreviousScreen(){
             view.screens[currentScreen].setVisible(false);
             if (currentScreen > 0) {
@@ -167,6 +176,7 @@ public class Controller {
             view.addAProjectLeaderPromptPanel.clear();
     }
 
+    // Written by Bjarke Bak Jensen s214957
     private void changeScreen(){
         view.screens[currentScreen].setVisible(false);
         if (currentScreen < 2) {
@@ -178,6 +188,7 @@ public class Controller {
         view.projectCreationPromptPanel.clear();
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void addAnEmployee(){
         int inputs = JOptionPane.showConfirmDialog(null, view.addEmployeePromptPanel, "Enter Initials of Employee to be added and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
@@ -201,6 +212,7 @@ public class Controller {
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void changeActivityDates(){
         int inputs = JOptionPane.showConfirmDialog(null, view.activityDatesChangePromptPanel, "Enter Your Initials, Start Date and End Date", JOptionPane.OK_CANCEL_OPTION);
         if (inputs == JOptionPane.OK_OPTION) {
@@ -225,6 +237,7 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void changeBudgetedTime(){
         int inputs = JOptionPane.showConfirmDialog(null, view.changeBudgetedTimePromptPanel, "Enter Budgeted Time and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
@@ -248,6 +261,7 @@ public class Controller {
         }
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void registerHoursForActivity(){
         int inputs = JOptionPane.showConfirmDialog(null, view.registerHoursPromptPanel, "Enter Hours and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
@@ -270,6 +284,7 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void unregisterHoursForActivity(){
         int inputs = JOptionPane.showConfirmDialog(null, view.unregisterHoursPromptPanel, "Enter Hours and Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){
@@ -292,6 +307,7 @@ public class Controller {
         }
     }
 
+    // Written by Mathias Edvold s214973
     public void getAvailableEmployees(){
         int index1 = view.projectFieldsJTable.getSelectedRow();
         String projectName = (String) view.projectFieldsJTable.getValueAt(index1,0);
@@ -308,6 +324,7 @@ public class Controller {
         JOptionPane.showMessageDialog(null, view.availableEmployeesScrollPane, "Available Employees for Activity : " + currentActivity.getName(), JOptionPane.OK_OPTION);
     }
 
+    // Written by Bjarke Bak Jensen s214957
     public void showReport(){
         int inputs = JOptionPane.showConfirmDialog(null, view.showReportPromptPanel, "Enter Your Initials", JOptionPane.OK_CANCEL_OPTION);
         if(inputs == JOptionPane.OK_OPTION){

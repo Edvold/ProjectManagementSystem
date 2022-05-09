@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
+// Written by Bjarke Bak Jensen s214957
 public class AddEmployeeWhitebox {
     private Project project;
     private Employee employee;
@@ -13,6 +14,7 @@ public class AddEmployeeWhitebox {
     private LocalDateTime startDate;
     private ErrorMessageHolder errorMessageHolder = new ErrorMessageHolder();
 
+    // Written by Bjarke Bak Jensen s214957
     @Test
     public void testDataSetA() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         startDate = LocalDateTime.now().plusDays(1);
@@ -33,6 +35,7 @@ public class AddEmployeeWhitebox {
         assertTrue(errorMessageHolder.getErrorMessage().equals("Only the project leader can change the data of an activity"));
     }
 
+    // Written by Bjarke Bak Jensen s214957
     @Test
     public void testDataSetB() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
@@ -55,6 +58,7 @@ public class AddEmployeeWhitebox {
         assertTrue(errorMessageHolder.getErrorMessage().equals("The employee is already a part of the activity"));
     }
 
+    // Written by Bjarke Bak Jensen s214957
     @Test
     public void testDataSetC() throws DuplicateNameError, InvalidDateError, EmployeeIsUnavailableError, DateNotInitializedError, MissingRequiredPermissionError {
         ProjectManager.getInstance().emptyList();
